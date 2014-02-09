@@ -31,40 +31,111 @@
 #include <rtems/nvdisk.h>
 #include <rtems/nvdisk-sram.h>
 #include <rtems/shell.h>
+#include <rtems/io.h>
+#include <bsp/io.h>
+
+const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(3, 12), \
+		  .pin_last = STM32F4_GPIO_PIN(3, 12), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_100_MHZ, \
+		  .pupd = STM32F4_GPIO_NO_PULL, \
+		  .output = 0, \
+		  .af = 0, \
+		  .reserved = 0\
+		} \
+	},
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(3, 13), \
+		  .pin_last = STM32F4_GPIO_PIN(3, 13), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_100_MHZ, \
+		  .pupd = STM32F4_GPIO_NO_PULL, \
+		  .output = 0, \
+		  .af = 0, \
+		  .reserved = 0\
+		} \
+	},
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(3, 14), \
+		  .pin_last = STM32F4_GPIO_PIN(3, 14), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_100_MHZ, \
+		  .pupd = STM32F4_GPIO_NO_PULL, \
+		  .output = 0, \
+		  .af = 0, \
+		  .reserved = 0\
+		} \
+	},
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(3, 15), \
+		  .pin_last = STM32F4_GPIO_PIN(3, 15), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_100_MHZ, \
+		  .pupd = STM32F4_GPIO_NO_PULL, \
+		  .output = 0, \
+		  .af = 0, \
+		  .reserved = 0\
+		} \
+	},
+  STM32F4_GPIO_CONFIG_TERMINAL
+};
+
+
+//void stm32f4_gpio_set_output(int pin, bool set);
 
 static void xyos_menu (void)
 {
-  char inbuf[10];
+	bool led_flag = false;
+	char inbuf[10];
 
-  printf("   XYOS TEST  \n");
-  
-  printf("	 p -> part_table_initialize\n");
-  printf("	 f -> mount all disks in fs_table\n");
-  printf("	 l -> list	file\n");
-  printf("	 r -> read	file\n");
-  printf("	 w -> write file\n");
-  printf("	 s -> start shell\n");
-  printf("	 Enter your selection ==>");
-  /*
-   * Wait for characters from console terminal
-   */
-  for (;;) {
-    fflush(stdout);
+	printf("   XYOS TEST  \n");
 
-    inbuf[0] = '\0';
-    fgets(inbuf,sizeof(inbuf),stdin);
-    switch (inbuf[0]) {
-    case 's':
-      break;
-    default:
-      printf("\n");
-      break;
-    }
+	printf("	 p -> part_table_initialize\n");
+	printf("	 f -> mount all disks in fs_table\n");
+	printf("	 l -> list	file\n");
+	printf("	 r -> read	file\n");
+	printf("	 w -> write file\n");
+	printf("	 s -> start shell\n");
+	printf("	 Enter your selection ==>");
+	/*
+	* Wait for characters from console terminal
+	*/
+	stm32f4_gpio_set_config(&stm32f4_led_config_gpio[0]);
+	stm32f4_gpio_set_config(&stm32f4_led_config_gpio[1]);
+	stm32f4_gpio_set_config(&stm32f4_led_config_gpio[2]);
+	stm32f4_gpio_set_config(&stm32f4_led_config_gpio[3]);
+	for (;;) {
+	fflush(stdout);
 
-  }
-  exit (0);
+	inbuf[0] = '\0';
+	fgets(inbuf,sizeof(inbuf),stdin);
+	switch (inbuf[0]) {
+	case 's':
+	  //GPIO_SetBits(GPIOD, GPIO_Pin_12);
+	  led_flag = !led_flag;
+	  stm32f4_gpio_set_output(STM32F4_GPIO_D12, led_flag);
+	  stm32f4_gpio_set_output(STM32F4_GPIO_D13, led_flag);
+	  stm32f4_gpio_set_output(STM32F4_GPIO_D14, led_flag);
+	  stm32f4_gpio_set_output(STM32F4_GPIO_D15, led_flag);
+	  break;
+	default:
+	  printf("\n");
+	  break;
+	}
+
+	}
+	exit (0);
 }
-
 
 /*
  * RTEMS File Menu Task
