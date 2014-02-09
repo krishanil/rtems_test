@@ -72,12 +72,6 @@ The following describes each of the sample applications:
       This is a simple test of the user's Clock Tick device driver.
       This test has an initialization task create three application
       tasks which sleep and periodically wake up and print the time.
-
-   unlimited
-
-      This is a test for the umlimited object feature of RTEMS. Here
-      you can configure RTEMS to give as many objects as memory
-      in the Workspace.
       
    xyos
    

@@ -66,7 +66,6 @@ fileio/Makefile
 nsecs/Makefile
 paranoia/Makefile
 ticker/Makefile
-unlimited/Makefile
 xyos/Makefile
 base_mp/Makefile
 base_mp/node1/Makefile
