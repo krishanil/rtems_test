@@ -617,101 +617,7 @@ static void writeFile(
 #define writeScript( _name, _contents ) \
         writeFile( _name, 0777, _contents )
 
-static void fileio_start_shell(void)
-{
-  int sc;
 
-  sc = mkdir("/scripts", 0777);
-  if ( sc ) {
-    printf( "mkdir /scripts: %s:\n", strerror(errno) );
-  }
-
-  sc = mkdir("/etc", 0777);
-  if ( sc ) {
-    printf( "mkdir /etc: %s:\n", strerror(errno) );
-  }
-
-  printf(
-    "Creating /etc/passwd and group with three useable accounts\n"
-    "root/pwd , test/pwd, rtems/NO PASSWORD"
-  );
-
-  writeFile(
-    "/etc/passwd",
-    0644,
-    "root:7QR4o148UPtb.:0:0:root::/:/bin/sh\n"
-    "rtems:*:1:1:RTEMS Application::/:/bin/sh\n"
-    "test:8Yy.AaxynxbLI:2:2:test account::/:/bin/sh\n"
-    "tty:!:3:3:tty owner::/:/bin/false\n"
-  );
-  writeFile(
-    "/etc/group",
-    0644,
-    "root:x:0:root\n"
-    "rtems:x:1:rtems\n"
-    "test:x:2:test\n"
-    "tty:x:3:tty\n"
-  );
-
-  writeScript(
-    "/scripts/js",
-    "#! joel\n"
-    "\n"
-    "date\n"
-    "echo Script successfully ran\n"
-    "date\n"
-    "stackuse\n"
-  );
-
-  writeScript(
-    "/scripts/j1",
-    "#! joel -s 20480 -t JESS\n"
-    "stackuse\n"
-  );
-
-  rtems_shell_write_file(
-    "/scripts/j2",
-    "echo j2 TEST FILE\n"
-    "echo j2   SHOULD BE non-executable AND\n"
-    "echo j2   DOES NOT have the magic first line\n"
-  );
-
-  rtems_shell_add_cmd ("mkrd", "files",
-                       "Create a RAM disk driver", create_ramdisk);
-  rtems_shell_add_cmd ("mknvd", "files",
-                       "Create a NV disk driver", create_nvdisk);
-  rtems_shell_add_cmd ("nverase", "misc",
-                       "nverase driver", shell_nvdisk_erase);
-  rtems_shell_add_cmd ("nvtrace", "misc",
-                       "nvtrace driver level", shell_nvdisk_trace);
-  rtems_shell_add_cmd ("bdbuftrace", "files",
-                       "bdbuf trace toggle", shell_bdbuf_trace);
-  rtems_shell_add_cmd ("td", "files",
-                       "Test disk", disk_test_block_sizes);
-#if RTEMS_RFS_TRACE
-  rtems_shell_add_cmd ("rfs", "files",
-                       "RFS trace",
-                       rtems_rfs_trace_shell_command);
-#endif
-#if RTEMS_RFS_RTEMS_TRACE
-  rtems_shell_add_cmd ("rrfs", "files",
-                       "RTEMS RFS trace",
-                       rtems_rfs_rtems_trace_shell_command);
-#endif
-
-  printf("\n =========================\n");
-  printf(" starting shell\n");
-  printf(" =========================\n");
-  rtems_shell_init(
-    "SHLL",                          /* task_name */
-    RTEMS_MINIMUM_STACK_SIZE * 4,    /* task_stacksize */
-    100,                             /* task_priority */
-    "/dev/console",                  /* devname */
-    false,                           /* forever */
-    true,                            /* wait */
-    NULL                             /* login */
-  );
-}
 #endif /* USE_SHELL */
 
 static void fileio_print_free_heap(void)
@@ -1138,117 +1044,11 @@ static void fileio_read_file(void)
 
 }
 
-static void fileio_menu (void)
-{
-  char inbuf[10];
 
-  /*
-   * Wait for characters from console terminal
-   */
-  for (;;) {
-    printf(" =========================\n");
-    printf(" RTEMS FILE I/O Test Menu \n");
-    printf(" =========================\n");
-    printf("   p -> part_table_initialize\n");
-    printf("   f -> mount all disks in fs_table\n");
-    printf("   l -> list  file\n");
-    printf("   r -> read  file\n");
-    printf("   w -> write file\n");
-#ifdef USE_SHELL
-    printf("   s -> start shell\n");
-#endif
-    printf("   Enter your selection ==>");
-    fflush(stdout);
 
-    inbuf[0] = '\0';
-    fgets(inbuf,sizeof(inbuf),stdin);
-    switch (inbuf[0]) {
-    case 'l':
-      fileio_list_file ();
-      break;
-    case 'r':
-      fileio_read_file ();
-      break;
-    case 'w':
-      fileio_write_file ();
-      break;
-    case 'p':
-      fileio_part_table_initialize ();
-      break;
-    case 'f':
-      fileio_fsmount ();
-      break;
-#ifdef USE_SHELL
-    case 's':
-      fileio_start_shell ();
-      break;
-#endif
-    default:
-      printf("Selection `%c` not implemented\n",inbuf[0]);
-      break;
-    }
 
-  }
-  exit (0);
-}
 
-/*
- * RTEMS File Menu Task
- */
-static rtems_task
-fileio_task (rtems_task_argument ignored)
-{
-  fileio_menu();
-}
 
-static void
-notification (int fd, int seconds_remaining, void *arg)
-{
-  printf(
-    "Press any key to start file I/O sample (%is remaining)\n",
-    seconds_remaining
-  );
-}
-
-/*
- * RTEMS Startup Task
- */
-rtems_task
-Init (rtems_task_argument ignored)
-{
-  rtems_name Task_name;
-  rtems_id   Task_id;
-  rtems_status_code status;
-
-  puts( "\n\n*** TEST FILE I/O SAMPLE ***" );
-
-  status = rtems_shell_wait_for_input(
-    STDIN_FILENO,
-    20,
-    notification,
-    NULL
-  );
-  if (status == RTEMS_SUCCESSFUL) {
-    Task_name = rtems_build_name('F','M','N','U');
-
-    status = rtems_task_create(
-      Task_name, 1, RTEMS_MINIMUM_STACK_SIZE * 2,
-      RTEMS_DEFAULT_MODES ,
-      RTEMS_FLOATING_POINT | RTEMS_DEFAULT_ATTRIBUTES, &Task_id
-    );
-    directive_failed( status, "create" ); 
-
-    status = rtems_task_start( Task_id, fileio_task, 1 );
-    directive_failed( status, "start" ); 
-
-    status = rtems_task_delete( RTEMS_SELF );
-    directive_failed( status, "delete" ); 
-  } else {
-    puts( "*** END OF TEST FILE I/O SAMPLE ***" );
-
-    rtems_test_exit( 0 );
-  }
-}
 
 #if defined(USE_SHELL)
 /*
@@ -1291,15 +1091,119 @@ static rtems_shell_alias_t Shell_USERECHO_Alias = {
 #endif
 
 #else
+
+static void
+notification (int fd, int seconds_remaining, void *arg)
+{
+  printf(
+    "Press any key to start file I/O sample (%is remaining)\n",
+    seconds_remaining
+  );
+}
+
+static void fileio_start_shell(void)
+{
+  printf("\n =========================\n");
+  printf(" starting shell\n");
+  printf(" =========================\n");
+  rtems_shell_init(
+    "SHLL",                          /* task_name */
+    RTEMS_MINIMUM_STACK_SIZE * 4,    /* task_stacksize */
+    100,                             /* task_priority */
+    "/dev/console",                  /* devname */
+    false,                           /* forever */
+    true,                            /* wait */
+    NULL                             /* login */
+  );
+}
+
+
+static void fileio_menu (void)
+{
+  char inbuf[10];
+
+  /*
+   * Wait for characters from console terminal
+   */
+  for (;;) {
+    printf(" =========================\n");
+    printf(" RTEMS FILE I/O Test Menu \n");
+    printf(" =========================\n");
+    printf("   p -> part_table_initialize\n");
+    printf("   f -> mount all disks in fs_table\n");
+    printf("   l -> list  file\n");
+    printf("   r -> read  file\n");
+    printf("   w -> write file\n");
+    printf("   s -> start shell\n");
+    printf("   Enter your selection ==>");
+    fflush(stdout);
+
+    inbuf[0] = '\0';
+    fgets(inbuf,sizeof(inbuf),stdin);
+    switch (inbuf[0]) {
+
+    case 's':
+      fileio_start_shell ();
+      break;
+    default:
+      printf("Selection `%c` not implemented\n",inbuf[0]);
+      break;
+    }
+
+  }
+  exit (0);
+}
+
+
+/*
+ * RTEMS File Menu Task
+ */
+static rtems_task
+fileio_task (rtems_task_argument ignored)
+{
+  fileio_menu();
+}
+
 /*
  * RTEMS Startup Task
  */
 rtems_task
 Init (rtems_task_argument ignored)
 {
-  puts( "\n\n*** FILE I/O SAMPLE AND TEST ***" );
-  puts( "\n\n*** NOT ENOUGH MEMORY TO BUILD AND RUN ***" );
+  rtems_name Task_name;
+  rtems_id   Task_id;
+  rtems_status_code status;
+
+  puts( "\n\n*** TEST FILE I/O SAMPLE ***" );
+
+  status = rtems_shell_wait_for_input(
+    STDIN_FILENO,
+    20,
+    notification,
+    NULL
+  );
+  if (status == RTEMS_SUCCESSFUL) {
+    Task_name = rtems_build_name('F','M','N','U');
+
+    status = rtems_task_create(
+      Task_name, 1, RTEMS_MINIMUM_STACK_SIZE * 2,
+      RTEMS_DEFAULT_MODES ,
+      RTEMS_FLOATING_POINT | RTEMS_DEFAULT_ATTRIBUTES, &Task_id
+    );
+    directive_failed( status, "create" ); 
+
+    status = rtems_task_start( Task_id, fileio_task, 1 );
+    directive_failed( status, "start" ); 
+
+    status = rtems_task_delete( RTEMS_SELF );
+    directive_failed( status, "delete" ); 
+  } else {
+    puts( "*** END OF TEST FILE I/O SAMPLE ***" );
+
+    rtems_test_exit( 0 );
+  }
 }
+
 
 #define CONFIGURE_SHELL_COMMANDS_INIT
 #define CONFIGURE_SHELL_COMMANDS_ALL
