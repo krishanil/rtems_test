@@ -1,6 +1,6 @@
 
 rtems_tests_PROGRAMS = xyos
-xyos_SOURCES = init.c test1.c test2.c test3.c system.h
+xyos_SOURCES = init.c system.h
 
 dist_rtems_tests_DATA = xyos.scn
 dist_rtems_tests_DATA += xyos.doc
