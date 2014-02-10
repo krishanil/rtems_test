@@ -81,6 +81,17 @@
 #define STM32F4_USART_5 ((volatile stm32f4_usart *) (STM32F4_BASE + 0x40005000))
 #define STM32F4_USART_6 ((volatile stm32f4_usart *) (STM32F4_BASE + 0x40011400))
 
+//#include <bsp/stm32f4xxxx_exti.h>
+typedef struct {
+	uint32_t memrmp;		/*!< SYSCFG memory remap register,						Address offset: 0x00	  */
+	uint32_t pmc;			/*!< SYSCFG peripheral mode configuration register, 	Address offset: 0x04	  */
+	uint32_t exticr[4];	/*!< SYSCFG external interrupt configuration registers, Address offset: 0x08-0x14 */
+	uint32_t	  reserved[2];	/*!< Reserved, 0x18-0x1C														  */ 
+	uint32_t cmpcr;		/*!< SYSCFG Compensation cell control register, 		Address offset: 0x20	  */
+} stm32f4_exti;
+
+#define STM32F4_EXTI ((volatile stm32f4_exti *) (STM32F4_BASE + 0x40013800))
+
 /** @} */
 
 #endif /* STM32F4_FAMILY_F4XXXX */
@@ -93,7 +104,7 @@
  */
 
 #include <bsp/stm32f10xxx_exti.h>
-#define STM32F4_EXTI ((volatile stm32f4_exti *) (STM32F4_BASE + 0x40010400))
+#define STM32F4_EXTI ((volatile stm32f4_exti *) (STM32F4_BASE + 0x40013800))
 
 /** @} */
 
