@@ -201,7 +201,6 @@ typedef union {
 /** @} */
 
 #endif /* STM32F4_FAMILY_F4XXXX */
-#if 0
 #ifdef STM32F4_FAMILY_F10XXX
 
 /**
@@ -333,7 +332,6 @@ typedef union {
 /** @} */
 
 #endif /* STM32F4_FAMILY_F10XXX */
-#endif
 
 extern const stm32f4_gpio_config stm32f4_start_config_gpio [];
 
