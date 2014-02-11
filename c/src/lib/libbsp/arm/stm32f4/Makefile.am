@@ -59,6 +59,18 @@ include_bsp_HEADERS += include/io.h
 include_bsp_HEADERS += include/rcc.h
 
 ###############################################################################
+#                  STM32F4-Discovery_FW_V1.1.0                                #
+###############################################################################
+include_bsp_HEADERS += f_include/core_cm4.h
+include_bsp_HEADERS += f_include/core_cm4_simd.h
+include_bsp_HEADERS += f_include/core_cmFunc.h
+include_bsp_HEADERS += f_include/core_cmInstr.h
+include_bsp_HEADERS += f_include/stm32f4xx.h
+include_bsp_HEADERS += f_include/stm32f4xx_gpio.h
+include_bsp_HEADERS += f_include/system_stm32f4xx.h
+
+
+###############################################################################
 #                  LibBSP                                                     #
 ###############################################################################
 

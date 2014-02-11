@@ -39,10 +39,8 @@
 
 #include <rtems/status-checks.h>
 
-
-#include "stm32f4xx_gpio.h"
-#include "stm32f4xx.h"
-
+/****** STM32F4-Discovery_FW_V1.1.0 ******/
+#include <bsp/stm32f4xx_gpio.h>
 
 const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
 	{ \

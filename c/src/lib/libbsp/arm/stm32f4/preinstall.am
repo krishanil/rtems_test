@@ -145,3 +145,34 @@ $(PROJECT_INCLUDE)/bsp/rcc.h: include/rcc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/rcc.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/rcc.h
 
+###############################################################################
+#                  STM32F4-Discovery_FW_V1.1.0                                #
+###############################################################################
+
+$(PROJECT_INCLUDE)/bsp/core_cm4.h: f_include/core_cm4.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/core_cm4.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/core_cm4.h
+
+$(PROJECT_INCLUDE)/bsp/core_cm4_simd.h: f_include/core_cm4_simd.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/core_cm4_simd.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/core_cm4_simd.h
+
+$(PROJECT_INCLUDE)/bsp/core_cmFunc.h: f_include/core_cmFunc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/core_cmFunc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/core_cmFunc.h
+
+$(PROJECT_INCLUDE)/bsp/core_cmInstr.h: f_include/core_cmInstr.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/core_cmInstr.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/core_cmInstr.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx.h: f_include/stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h: f_include/stm32f4xx_gpio.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h
+
+$(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h: f_include/system_stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
