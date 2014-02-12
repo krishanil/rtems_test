@@ -41,6 +41,8 @@
 
 /****** STM32F4-Discovery_FW_V1.1.0 ******/
 #include <bsp/stm32f4xx_gpio.h>
+#include <bsp/stm32f4xx_syscfg.h>
+#include <bsp/stm32f4xx_exti.h>
 
 const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
 	{ \
@@ -115,112 +117,15 @@ const stm32f4_gpio_config stm32f4_key_config_gpio [] = {
   STM32F4_GPIO_CONFIG_TERMINAL
 };
 
-typedef struct {
-	uint32_t memrmp;		/*!< SYSCFG memory remap register,						Address offset: 0x00	  */
-	uint32_t pmc;			/*!< SYSCFG peripheral mode configuration register, 	Address offset: 0x04	  */
-	uint32_t exticr[4];	/*!< SYSCFG external interrupt configuration registers, Address offset: 0x08-0x14 */
-	uint32_t	  reserved[2];	/*!< Reserved, 0x18-0x1C														  */ 
-	uint32_t cmpcr;		/*!< SYSCFG Compensation cell control register, 		Address offset: 0x20	  */
-} stm32f4_syscfg;
-
-#define STM32F4_SYSCFG 	((volatile stm32f4_syscfg *) (0 + 0x40013800))
-
-typedef struct
-{
-  uint32_t IMR;    /*!< EXTI Interrupt mask register,            Address offset: 0x00 */
-  uint32_t EMR;    /*!< EXTI Event mask register,                Address offset: 0x04 */
-  uint32_t RTSR;   /*!< EXTI Rising trigger selection register,  Address offset: 0x08 */
-  uint32_t FTSR;   /*!< EXTI Falling trigger selection register, Address offset: 0x0C */
-  uint32_t SWIER;  /*!< EXTI Software interrupt event register,  Address offset: 0x10 */
-  uint32_t PR;     /*!< EXTI Pending register,                   Address offset: 0x14 */
-} stm32f4_exti;
-
-#define STM32F4_EXTI 	((volatile stm32f4_exti *) (0 + 0x40013c00))
-
-
-void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex)
-{
-  uint32_t tmp = 0x00;
-
-  tmp = ((uint32_t)0x0F) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03));
-  SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] &= ~tmp;
-  SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] |= (((uint32_t)EXTI_PortSourceGPIOx) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03)));
-
-  printk("tmp=0x%x, SYSCFG=0x%x, SYSCFG->EXTICR=0x%x\n", tmp, SYSCFG, SYSCFG->EXTICR);
-}
-
-void stm32f4_exti_line_config(unsigned char EXTI_PortSourceGPIOx, unsigned char EXTI_PinSourcex)
-{
-  uint32_t tmp = 0x00;
-  volatile stm32f4_syscfg *syscfg = STM32F4_SYSCFG;
-
-  tmp = ((uint32_t)0x0F) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03));
-  syscfg->exticr[EXTI_PinSourcex >> 0x02] &= ~tmp;
-  syscfg->exticr[EXTI_PinSourcex >> 0x02] |= (((uint32_t)EXTI_PortSourceGPIOx) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03)));
-
-  printk("tmp=0x%x, syscfg=0x%x, syscfg->exticr=0x%x\n", tmp, syscfg, syscfg->exticr);
-}
-
-typedef struct {
-	unsigned int EXTI_Line;
-	unsigned int EXTI_Mode;
-	unsigned int EXTI_Trigger;
-	unsigned int EXTI_LineCmd;
-} EXTI_InitTypeDef;
-
-void EXTI_Init(EXTI_InitTypeDef* EXTI_InitStruct)
-{
-  uint32_t tmp = 0;
-  volatile stm32f4_exti *exti = STM32F4_EXTI;
-
-  tmp = (uint32_t)STM32F4_EXTI;
-     
-  if (EXTI_InitStruct->EXTI_LineCmd != DISABLE)
-  {
-    /* Clear EXTI line configuration */
-    exti->IMR &= ~EXTI_InitStruct->EXTI_Line;
-    exti->EMR &= ~EXTI_InitStruct->EXTI_Line;
-    
-    tmp += EXTI_InitStruct->EXTI_Mode;
-
-    *(volatile uint32_t *) tmp |= EXTI_InitStruct->EXTI_Line;
-
-    /* Clear Rising Falling edge configuration */
-    exti->RTSR &= ~EXTI_InitStruct->EXTI_Line;
-    exti->FTSR &= ~EXTI_InitStruct->EXTI_Line;
-    
-    /* Select the trigger for the selected external interrupts */
-    if (EXTI_InitStruct->EXTI_Trigger == 0x10)
-    {
-      /* Rising Falling edge */
-      exti->RTSR |= EXTI_InitStruct->EXTI_Line;
-      exti->FTSR |= EXTI_InitStruct->EXTI_Line;
-    }
-    else
-    {
-      tmp = (uint32_t)STM32F4_EXTI;
-      tmp += EXTI_InitStruct->EXTI_Trigger;
-
-      *(volatile uint32_t *) tmp |= EXTI_InitStruct->EXTI_Line;
-    }
-  }
-  else
-  {
-    tmp += EXTI_InitStruct->EXTI_Mode;
-
-    /* Disable the selected external lines */
-    *(volatile uint32_t *) tmp &= ~EXTI_InitStruct->EXTI_Line;
-  }
-}
-
 static void stm32f4_key_handler(void *arg)
 {
-	volatile stm32f4_exti *exti = STM32F4_EXTI;
-
-	exti->PR = 0x00001;
-	printk("%s, %d\n", __func__, __LINE__);
+	if(EXTI_GetITStatus(EXTI_Line0) != RESET)
+	{
+		/* Clear the EXTI line 0 pending bit */
+		EXTI_ClearITPendingBit(EXTI_Line0);
+		printk("%s, %d\n", __func__, __LINE__);
+	}	
 }
-
 
 //void stm32f4_gpio_set_output(int pin, bool set);
 
@@ -255,12 +160,14 @@ static void xyos_menu (void)
 
 	stm32f4_gpio_set_config(&stm32f4_key_config_gpio[0]);
 
-	stm32f4_exti_line_config(0x00, 0x00);
+	/* Connect EXTI Line0 to PA0 pin */
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource0);
 	
-	EXTI_InitStructure.EXTI_Line = 0x00001;
-	EXTI_InitStructure.EXTI_Mode = 0;
-	EXTI_InitStructure.EXTI_Trigger = 0x08;	
-	EXTI_InitStructure.EXTI_LineCmd = 1;
+	/* Configure EXTI Line0 */
+	EXTI_InitStructure.EXTI_Line = EXTI_Line0;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;	
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure);
 	
 	/* Install interrupt handler and disable this vector */
