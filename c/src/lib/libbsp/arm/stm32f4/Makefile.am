@@ -68,7 +68,9 @@ include_bsp_HEADERS += f_include/core_cmInstr.h
 include_bsp_HEADERS += f_include/stm32f4xx.h
 include_bsp_HEADERS += f_include/stm32f4xx_gpio.h
 include_bsp_HEADERS += f_include/system_stm32f4xx.h
-
+include_bsp_HEADERS += f_include/stm32f4xx_syscfg.h
+include_bsp_HEADERS += f_include/stm32f4xx_rcc.h
+include_bsp_HEADERS += f_include/stm32f4xx_exti.h
 
 ###############################################################################
 #                  LibBSP                                                     #
@@ -123,6 +125,13 @@ libbsp_a_SOURCES += console/usart.c
 # I2C
 libbsp_a_SOURCES += i2c/i2c.c
 libbsp_a_SOURCES += i2c/i2c-config.c
+
+###############################################################################
+#                  STM32F4-Discovery_FW_V1.1.0                                #
+###############################################################################
+libbsp_a_SOURCES += f_c/stm32f4xx_rcc.c
+libbsp_a_SOURCES += f_c/stm32f4xx_syscfg.c
+libbsp_a_SOURCES += f_c/stm32f4xx_exti.c
 
 # Clock
 libbsp_a_SOURCES += ../../shared/clockdrv_shell.h

@@ -176,3 +176,15 @@ PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h
 $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h: f_include/system_stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h: f_include/stm32f4xx_syscfg.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_rcc.h: f_include/stm32f4xx_rcc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_rcc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_rcc.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h: f_include/stm32f4xx_exti.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h
