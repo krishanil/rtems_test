@@ -165,26 +165,114 @@ $(PROJECT_INCLUDE)/bsp/core_cmInstr.h: f_include/core_cmInstr.h $(PROJECT_INCLUD
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/core_cmInstr.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/core_cmInstr.h
 
-$(PROJECT_INCLUDE)/bsp/stm32f4xx.h: f_include/stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
-	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx.h
-PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx.h
+$(PROJECT_INCLUDE)/bsp/misc.h: f_include/misc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/misc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/misc.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_adc.h: f_include/stm32f4xx_adc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_adc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_adc.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_can.h: f_include/stm32f4xx_can.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_can.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_can.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_crc.h: f_include/stm32f4xx_crc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_crc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_crc.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_cryp.h: f_include/stm32f4xx_cryp.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_cryp.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_cryp.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_dac.h: f_include/stm32f4xx_dac.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_dac.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_dac.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_dbgmcu.h: f_include/stm32f4xx_dbgmcu.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_dbgmcu.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_dbgmcu.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_dcmi.h: f_include/stm32f4xx_dcmi.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_dcmi.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_dcmi.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_dma.h: f_include/stm32f4xx_dma.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_dma.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_dma.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h: f_include/stm32f4xx_exti.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_flash.h: f_include/stm32f4xx_flash.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_flash.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_flash.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_fsmc.h: f_include/stm32f4xx_fsmc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_fsmc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_fsmc.h
 
 $(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h: f_include/stm32f4xx_gpio.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_gpio.h
 
-$(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h: f_include/system_stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
-	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
-PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
+$(PROJECT_INCLUDE)/bsp/stm32f4xx.h: f_include/stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx.h
 
-$(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h: f_include/stm32f4xx_syscfg.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
-	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h
-PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_hash.h: f_include/stm32f4xx_hash.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_hash.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_hash.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_i2c.h: f_include/stm32f4xx_i2c.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_i2c.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_i2c.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_iwdg.h: f_include/stm32f4xx_iwdg.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_iwdg.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_iwdg.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_pwr.h: f_include/stm32f4xx_pwr.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_pwr.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_pwr.h
 
 $(PROJECT_INCLUDE)/bsp/stm32f4xx_rcc.h: f_include/stm32f4xx_rcc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_rcc.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_rcc.h
 
-$(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h: f_include/stm32f4xx_exti.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
-	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h
-PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_exti.h
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_rng.h: f_include/stm32f4xx_rng.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_rng.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_rng.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_rtc.h: f_include/stm32f4xx_rtc.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_rtc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_rtc.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_sdio.h: f_include/stm32f4xx_sdio.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_sdio.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_sdio.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_spi.h: f_include/stm32f4xx_spi.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_spi.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_spi.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h: f_include/stm32f4xx_syscfg.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_syscfg.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_tim.h: f_include/stm32f4xx_tim.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_tim.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_tim.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_usart.h: f_include/stm32f4xx_usart.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_usart.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_usart.h
+
+$(PROJECT_INCLUDE)/bsp/stm32f4xx_wwdg.h: f_include/stm32f4xx_wwdg.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/stm32f4xx_wwdg.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/stm32f4xx_wwdg.h
+
+$(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h: f_include/system_stm32f4xx.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/system_stm32f4xx.h

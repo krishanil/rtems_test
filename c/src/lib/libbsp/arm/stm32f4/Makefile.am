@@ -65,12 +65,34 @@ include_bsp_HEADERS += f_include/core_cm4.h
 include_bsp_HEADERS += f_include/core_cm4_simd.h
 include_bsp_HEADERS += f_include/core_cmFunc.h
 include_bsp_HEADERS += f_include/core_cmInstr.h
-include_bsp_HEADERS += f_include/stm32f4xx.h
-include_bsp_HEADERS += f_include/stm32f4xx_gpio.h
-include_bsp_HEADERS += f_include/system_stm32f4xx.h
-include_bsp_HEADERS += f_include/stm32f4xx_syscfg.h
-include_bsp_HEADERS += f_include/stm32f4xx_rcc.h
+include_bsp_HEADERS += f_include/misc.h
+include_bsp_HEADERS += f_include/stm32f4xx_adc.h
+include_bsp_HEADERS += f_include/stm32f4xx_can.h
+include_bsp_HEADERS += f_include/stm32f4xx_crc.h
+include_bsp_HEADERS += f_include/stm32f4xx_cryp.h
+include_bsp_HEADERS += f_include/stm32f4xx_dac.h
+include_bsp_HEADERS += f_include/stm32f4xx_dbgmcu.h
+include_bsp_HEADERS += f_include/stm32f4xx_dcmi.h
+include_bsp_HEADERS += f_include/stm32f4xx_dma.h
 include_bsp_HEADERS += f_include/stm32f4xx_exti.h
+include_bsp_HEADERS += f_include/stm32f4xx_flash.h
+include_bsp_HEADERS += f_include/stm32f4xx_fsmc.h
+include_bsp_HEADERS += f_include/stm32f4xx_gpio.h
+include_bsp_HEADERS += f_include/stm32f4xx.h
+include_bsp_HEADERS += f_include/stm32f4xx_hash.h
+include_bsp_HEADERS += f_include/stm32f4xx_i2c.h
+include_bsp_HEADERS += f_include/stm32f4xx_iwdg.h
+include_bsp_HEADERS += f_include/stm32f4xx_pwr.h
+include_bsp_HEADERS += f_include/stm32f4xx_rcc.h
+include_bsp_HEADERS += f_include/stm32f4xx_rng.h
+include_bsp_HEADERS += f_include/stm32f4xx_rtc.h
+include_bsp_HEADERS += f_include/stm32f4xx_sdio.h
+include_bsp_HEADERS += f_include/stm32f4xx_spi.h
+include_bsp_HEADERS += f_include/stm32f4xx_syscfg.h
+include_bsp_HEADERS += f_include/stm32f4xx_tim.h
+include_bsp_HEADERS += f_include/stm32f4xx_usart.h
+include_bsp_HEADERS += f_include/stm32f4xx_wwdg.h
+include_bsp_HEADERS += f_include/system_stm32f4xx.h
 
 ###############################################################################
 #                  LibBSP                                                     #
@@ -129,9 +151,37 @@ libbsp_a_SOURCES += i2c/i2c-config.c
 ###############################################################################
 #                  STM32F4-Discovery_FW_V1.1.0                                #
 ###############################################################################
-libbsp_a_SOURCES += f_c/stm32f4xx_rcc.c
-libbsp_a_SOURCES += f_c/stm32f4xx_syscfg.c
-libbsp_a_SOURCES += f_c/stm32f4xx_exti.c
+libbsp_a_SOURCES += f_c/misc.c               
+libbsp_a_SOURCES += f_c/stm32f4xx_adc.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_can.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_crc.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_cryp_aes.c 
+libbsp_a_SOURCES += f_c/stm32f4xx_cryp.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_cryp_des.c 
+libbsp_a_SOURCES += f_c/stm32f4xx_cryp_tdes.c
+libbsp_a_SOURCES += f_c/stm32f4xx_dac.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_dbgmcu.c   
+libbsp_a_SOURCES += f_c/stm32f4xx_dcmi.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_dma.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_exti.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_flash.c    
+libbsp_a_SOURCES += f_c/stm32f4xx_fsmc.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_gpio.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_hash.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_hash_md5.c 
+libbsp_a_SOURCES += f_c/stm32f4xx_hash_sha1.c
+libbsp_a_SOURCES += f_c/stm32f4xx_i2c.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_iwdg.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_pwr.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_rcc.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_rng.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_rtc.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_sdio.c     
+libbsp_a_SOURCES += f_c/stm32f4xx_spi.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_syscfg.c   
+libbsp_a_SOURCES += f_c/stm32f4xx_tim.c      
+libbsp_a_SOURCES += f_c/stm32f4xx_usart.c    
+libbsp_a_SOURCES += f_c/stm32f4xx_wwdg.c
 
 # Clock
 libbsp_a_SOURCES += ../../shared/clockdrv_shell.h
