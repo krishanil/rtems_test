@@ -97,16 +97,16 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
-/*!< USART CR1 register clear Mask ((~(uint16_t)0xE9F3)) */
+/*!< USART cr1 register clear Mask ((~(uint16_t)0xE9F3)) */
 #define CR1_CLEAR_MASK            ((uint16_t)(USART_CR1_M | USART_CR1_PCE | \
                                               USART_CR1_PS | USART_CR1_TE | \
                                               USART_CR1_RE))
 
-/*!< USART CR2 register clock bits clear Mask ((~(uint16_t)0xF0FF)) */
+/*!< USART cr2 register clock bits clear Mask ((~(uint16_t)0xF0FF)) */
 #define CR2_CLOCK_CLEAR_MASK      ((uint16_t)(USART_CR2_CLKEN | USART_CR2_CPOL | \
                                               USART_CR2_CPHA | USART_CR2_LBCL))
 
-/*!< USART CR3 register clear Mask ((~(uint16_t)0xFCFF)) */
+/*!< USART cr3 register clear Mask ((~(uint16_t)0xFCFF)) */
 #define CR3_CLEAR_MASK            ((uint16_t)(USART_CR3_RTSE | USART_CR3_CTSE))
 
 /*!< USART Interrupts mask */
@@ -246,8 +246,8 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
     assert_param(IS_USART_1236_PERIPH(USARTx));
   }
 
-/*---------------------------- USART CR2 Configuration -----------------------*/
-  tmpreg = USARTx->CR2;
+/*---------------------------- USART cr2 Configuration -----------------------*/
+  tmpreg = USARTx->cr2;
 
   /* Clear STOP[13:12] bits */
   tmpreg &= (uint32_t)~((uint32_t)USART_CR2_STOP);
@@ -256,11 +256,11 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
       Set STOP[13:12] bits according to USART_StopBits value */
   tmpreg |= (uint32_t)USART_InitStruct->USART_StopBits;
   
-  /* Write to USART CR2 */
-  USARTx->CR2 = (uint16_t)tmpreg;
+  /* Write to USART cr2 */
+  USARTx->cr2 = (uint16_t)tmpreg;
 
-/*---------------------------- USART CR1 Configuration -----------------------*/
-  tmpreg = USARTx->CR1;
+/*---------------------------- USART cr1 Configuration -----------------------*/
+  tmpreg = USARTx->cr1;
 
   /* Clear M, PCE, PS, TE and RE bits */
   tmpreg &= (uint32_t)~((uint32_t)CR1_CLEAR_MASK);
@@ -272,11 +272,11 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
   tmpreg |= (uint32_t)USART_InitStruct->USART_WordLength | USART_InitStruct->USART_Parity |
             USART_InitStruct->USART_Mode;
 
-  /* Write to USART CR1 */
-  USARTx->CR1 = (uint16_t)tmpreg;
+  /* Write to USART cr1 */
+  USARTx->cr1 = (uint16_t)tmpreg;
 
-/*---------------------------- USART CR3 Configuration -----------------------*/  
-  tmpreg = USARTx->CR3;
+/*---------------------------- USART cr3 Configuration -----------------------*/  
+  tmpreg = USARTx->cr3;
 
   /* Clear CTSE and RTSE bits */
   tmpreg &= (uint32_t)~((uint32_t)CR3_CLEAR_MASK);
@@ -285,8 +285,8 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
       Set CTSE and RTSE bits according to USART_HardwareFlowControl value */
   tmpreg |= USART_InitStruct->USART_HardwareFlowControl;
 
-  /* Write to USART CR3 */
-  USARTx->CR3 = (uint16_t)tmpreg;
+  /* Write to USART cr3 */
+  USARTx->cr3 = (uint16_t)tmpreg;
 
 /*---------------------------- USART BRR Configuration -----------------------*/
   /* Configure the USART Baud Rate */
@@ -302,12 +302,12 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
   }
   
   /* Determine the integer part */
-  if ((USARTx->CR1 & USART_CR1_OVER8) != 0)
+  if ((USARTx->cr1 & USART_CR1_OVER8) != 0)
   {
     /* Integer part computing in case Oversampling mode is 8 Samples */
     integerdivider = ((25 * apbclock) / (2 * (USART_InitStruct->USART_BaudRate)));    
   }
-  else /* if ((USARTx->CR1 & USART_CR1_OVER8) == 0) */
+  else /* if ((USARTx->cr1 & USART_CR1_OVER8) == 0) */
   {
     /* Integer part computing in case Oversampling mode is 16 Samples */
     integerdivider = ((25 * apbclock) / (4 * (USART_InitStruct->USART_BaudRate)));    
@@ -318,11 +318,11 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
   fractionaldivider = integerdivider - (100 * (tmpreg >> 4));
 
   /* Implement the fractional part in the register */
-  if ((USARTx->CR1 & USART_CR1_OVER8) != 0)
+  if ((USARTx->cr1 & USART_CR1_OVER8) != 0)
   {
     tmpreg |= ((((fractionaldivider * 8) + 50) / 100)) & ((uint8_t)0x07);
   }
-  else /* if ((USARTx->CR1 & USART_CR1_OVER8) == 0) */
+  else /* if ((USARTx->cr1 & USART_CR1_OVER8) == 0) */
   {
     tmpreg |= ((((fractionaldivider * 16) + 50) / 100)) & ((uint8_t)0x0F);
   }
@@ -367,8 +367,8 @@ void USART_ClockInit(USART_TypeDef* USARTx, USART_ClockInitTypeDef* USART_ClockI
   assert_param(IS_USART_CPHA(USART_ClockInitStruct->USART_CPHA));
   assert_param(IS_USART_LASTBIT(USART_ClockInitStruct->USART_LastBit));
   
-/*---------------------------- USART CR2 Configuration -----------------------*/
-  tmpreg = USARTx->CR2;
+/*---------------------------- USART cr2 Configuration -----------------------*/
+  tmpreg = USARTx->cr2;
   /* Clear CLKEN, CPOL, CPHA and LBCL bits */
   tmpreg &= (uint32_t)~((uint32_t)CR2_CLOCK_CLEAR_MASK);
   /* Configure the USART Clock, CPOL, CPHA and LastBit ------------*/
@@ -378,8 +378,8 @@ void USART_ClockInit(USART_TypeDef* USARTx, USART_ClockInitTypeDef* USART_ClockI
   /* Set LBCL bit according to USART_LastBit value */
   tmpreg |= (uint32_t)USART_ClockInitStruct->USART_Clock | USART_ClockInitStruct->USART_CPOL | 
                  USART_ClockInitStruct->USART_CPHA | USART_ClockInitStruct->USART_LastBit;
-  /* Write to USART CR2 */
-  USARTx->CR2 = (uint16_t)tmpreg;
+  /* Write to USART cr2 */
+  USARTx->cr2 = (uint16_t)tmpreg;
 }
 
 /**
@@ -413,13 +413,13 @@ void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
   
   if (NewState != DISABLE)
   {
-    /* Enable the selected USART by setting the UE bit in the CR1 register */
-    USARTx->CR1 |= USART_CR1_UE;
+    /* Enable the selected USART by setting the UE bit in the cr1 register */
+    USARTx->cr1 |= USART_CR1_UE;
   }
   else
   {
-    /* Disable the selected USART by clearing the UE bit in the CR1 register */
-    USARTx->CR1 &= (uint16_t)~((uint16_t)USART_CR1_UE);
+    /* Disable the selected USART by clearing the UE bit in the cr1 register */
+    USARTx->cr1 &= (uint16_t)~((uint16_t)USART_CR1_UE);
   }
 }
 
@@ -460,13 +460,13 @@ void USART_OverSampling8Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
   
   if (NewState != DISABLE)
   {
-    /* Enable the 8x Oversampling mode by setting the OVER8 bit in the CR1 register */
-    USARTx->CR1 |= USART_CR1_OVER8;
+    /* Enable the 8x Oversampling mode by setting the OVER8 bit in the cr1 register */
+    USARTx->cr1 |= USART_CR1_OVER8;
   }
   else
   {
-    /* Disable the 8x Oversampling mode by clearing the OVER8 bit in the CR1 register */
-    USARTx->CR1 &= (uint16_t)~((uint16_t)USART_CR1_OVER8);
+    /* Disable the 8x Oversampling mode by clearing the OVER8 bit in the cr1 register */
+    USARTx->cr1 &= (uint16_t)~((uint16_t)USART_CR1_OVER8);
   }
 }  
 
@@ -486,13 +486,13 @@ void USART_OneBitMethodCmd(USART_TypeDef* USARTx, FunctionalState NewState)
   
   if (NewState != DISABLE)
   {
-    /* Enable the one bit method by setting the ONEBITE bit in the CR3 register */
-    USARTx->CR3 |= USART_CR3_ONEBIT;
+    /* Enable the one bit method by setting the ONEBITE bit in the cr3 register */
+    USARTx->cr3 |= USART_CR3_ONEBIT;
   }
   else
   {
-    /* Disable the one bit method by clearing the ONEBITE bit in the CR3 register */
-    USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_ONEBIT);
+    /* Disable the one bit method by clearing the ONEBITE bit in the cr3 register */
+    USARTx->cr3 &= (uint16_t)~((uint16_t)USART_CR3_ONEBIT);
   }
 }
 
@@ -609,9 +609,9 @@ void USART_SetAddress(USART_TypeDef* USARTx, uint8_t USART_Address)
   assert_param(IS_USART_ADDRESS(USART_Address)); 
     
   /* Clear the USART address */
-  USARTx->CR2 &= (uint16_t)~((uint16_t)USART_CR2_ADD);
+  USARTx->cr2 &= (uint16_t)~((uint16_t)USART_CR2_ADD);
   /* Set the USART address node */
-  USARTx->CR2 |= USART_Address;
+  USARTx->cr2 |= USART_Address;
 }
 
 /**
@@ -630,13 +630,13 @@ void USART_ReceiverWakeUpCmd(USART_TypeDef* USARTx, FunctionalState NewState)
   
   if (NewState != DISABLE)
   {
-    /* Enable the USART mute mode  by setting the RWU bit in the CR1 register */
-    USARTx->CR1 |= USART_CR1_RWU;
+    /* Enable the USART mute mode  by setting the RWU bit in the cr1 register */
+    USARTx->cr1 |= USART_CR1_RWU;
   }
   else
   {
-    /* Disable the USART mute mode by clearing the RWU bit in the CR1 register */
-    USARTx->CR1 &= (uint16_t)~((uint16_t)USART_CR1_RWU);
+    /* Disable the USART mute mode by clearing the RWU bit in the cr1 register */
+    USARTx->cr1 &= (uint16_t)~((uint16_t)USART_CR1_RWU);
   }
 }
 /**
@@ -655,8 +655,8 @@ void USART_WakeUpConfig(USART_TypeDef* USARTx, uint16_t USART_WakeUp)
   assert_param(IS_USART_ALL_PERIPH(USARTx));
   assert_param(IS_USART_WAKEUP(USART_WakeUp));
   
-  USARTx->CR1 &= (uint16_t)~((uint16_t)USART_CR1_WAKE);
-  USARTx->CR1 |= USART_WakeUp;
+  USARTx->cr1 &= (uint16_t)~((uint16_t)USART_CR1_WAKE);
+  USARTx->cr1 |= USART_WakeUp;
 }
 
 /**
@@ -724,8 +724,8 @@ void USART_LINBreakDetectLengthConfig(USART_TypeDef* USARTx, uint16_t USART_LINB
   assert_param(IS_USART_ALL_PERIPH(USARTx));
   assert_param(IS_USART_LIN_BREAK_DETECT_LENGTH(USART_LINBreakDetectLength));
   
-  USARTx->CR2 &= (uint16_t)~((uint16_t)USART_CR2_LBDL);
-  USARTx->CR2 |= USART_LINBreakDetectLength;  
+  USARTx->cr2 &= (uint16_t)~((uint16_t)USART_CR2_LBDL);
+  USARTx->cr2 |= USART_LINBreakDetectLength;  
 }
 
 /**
@@ -744,13 +744,13 @@ void USART_LINCmd(USART_TypeDef* USARTx, FunctionalState NewState)
   
   if (NewState != DISABLE)
   {
-    /* Enable the LIN mode by setting the LINEN bit in the CR2 register */
-    USARTx->CR2 |= USART_CR2_LINEN;
+    /* Enable the LIN mode by setting the LINEN bit in the cr2 register */
+    USARTx->cr2 |= USART_CR2_LINEN;
   }
   else
   {
-    /* Disable the LIN mode by clearing the LINEN bit in the CR2 register */
-    USARTx->CR2 &= (uint16_t)~((uint16_t)USART_CR2_LINEN);
+    /* Disable the LIN mode by clearing the LINEN bit in the cr2 register */
+    USARTx->cr2 &= (uint16_t)~((uint16_t)USART_CR2_LINEN);
   }
 }
 
@@ -766,7 +766,7 @@ void USART_SendBreak(USART_TypeDef* USARTx)
   assert_param(IS_USART_ALL_PERIPH(USARTx));
   
   /* Send break characters */
-  USARTx->CR1 |= USART_CR1_SBK;
+  USARTx->cr1 |= USART_CR1_SBK;
 }
 
 /**
@@ -821,13 +821,13 @@ void USART_HalfDuplexCmd(USART_TypeDef* USARTx, FunctionalState NewState)
   
   if (NewState != DISABLE)
   {
-    /* Enable the Half-Duplex mode by setting the HDSEL bit in the CR3 register */
-    USARTx->CR3 |= USART_CR3_HDSEL;
+    /* Enable the Half-Duplex mode by setting the HDSEL bit in the cr3 register */
+    USARTx->cr3 |= USART_CR3_HDSEL;
   }
   else
   {
-    /* Disable the Half-Duplex mode by clearing the HDSEL bit in the CR3 register */
-    USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_HDSEL);
+    /* Disable the Half-Duplex mode by clearing the HDSEL bit in the cr3 register */
+    USARTx->cr3 &= (uint16_t)~((uint16_t)USART_CR3_HDSEL);
   }
 }
 
@@ -924,13 +924,13 @@ void USART_SmartCardCmd(USART_TypeDef* USARTx, FunctionalState NewState)
   assert_param(IS_FUNCTIONAL_STATE(NewState));
   if (NewState != DISABLE)
   {
-    /* Enable the SC mode by setting the SCEN bit in the CR3 register */
-    USARTx->CR3 |= USART_CR3_SCEN;
+    /* Enable the SC mode by setting the SCEN bit in the cr3 register */
+    USARTx->cr3 |= USART_CR3_SCEN;
   }
   else
   {
-    /* Disable the SC mode by clearing the SCEN bit in the CR3 register */
-    USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_SCEN);
+    /* Disable the SC mode by clearing the SCEN bit in the cr3 register */
+    USARTx->cr3 &= (uint16_t)~((uint16_t)USART_CR3_SCEN);
   }
 }
 
@@ -949,13 +949,13 @@ void USART_SmartCardNACKCmd(USART_TypeDef* USARTx, FunctionalState NewState)
   assert_param(IS_FUNCTIONAL_STATE(NewState));
   if (NewState != DISABLE)
   {
-    /* Enable the NACK transmission by setting the NACK bit in the CR3 register */
-    USARTx->CR3 |= USART_CR3_NACK;
+    /* Enable the NACK transmission by setting the NACK bit in the cr3 register */
+    USARTx->cr3 |= USART_CR3_NACK;
   }
   else
   {
-    /* Disable the NACK transmission by clearing the NACK bit in the CR3 register */
-    USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_NACK);
+    /* Disable the NACK transmission by clearing the NACK bit in the cr3 register */
+    USARTx->cr3 &= (uint16_t)~((uint16_t)USART_CR3_NACK);
   }
 }
 
@@ -1019,8 +1019,8 @@ void USART_IrDAConfig(USART_TypeDef* USARTx, uint16_t USART_IrDAMode)
   assert_param(IS_USART_ALL_PERIPH(USARTx));
   assert_param(IS_USART_IRDA_MODE(USART_IrDAMode));
     
-  USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_IRLP);
-  USARTx->CR3 |= USART_IrDAMode;
+  USARTx->cr3 &= (uint16_t)~((uint16_t)USART_CR3_IRLP);
+  USARTx->cr3 |= USART_IrDAMode;
 }
 
 /**
@@ -1039,13 +1039,13 @@ void USART_IrDACmd(USART_TypeDef* USARTx, FunctionalState NewState)
     
   if (NewState != DISABLE)
   {
-    /* Enable the IrDA mode by setting the IREN bit in the CR3 register */
-    USARTx->CR3 |= USART_CR3_IREN;
+    /* Enable the IrDA mode by setting the IREN bit in the cr3 register */
+    USARTx->cr3 |= USART_CR3_IREN;
   }
   else
   {
-    /* Disable the IrDA mode by clearing the IREN bit in the CR3 register */
-    USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_IREN);
+    /* Disable the IrDA mode by clearing the IREN bit in the cr3 register */
+    USARTx->cr3 &= (uint16_t)~((uint16_t)USART_CR3_IREN);
   }
 }
 
@@ -1087,14 +1087,14 @@ void USART_DMACmd(USART_TypeDef* USARTx, uint16_t USART_DMAReq, FunctionalState 
   if (NewState != DISABLE)
   {
     /* Enable the DMA transfer for selected requests by setting the DMAT and/or
-       DMAR bits in the USART CR3 register */
-    USARTx->CR3 |= USART_DMAReq;
+       DMAR bits in the USART cr3 register */
+    USARTx->cr3 |= USART_DMAReq;
   }
   else
   {
     /* Disable the DMA transfer for selected requests by clearing the DMAT and/or
-       DMAR bits in the USART CR3 register */
-    USARTx->CR3 &= (uint16_t)~USART_DMAReq;
+       DMAR bits in the USART cr3 register */
+    USARTx->cr3 &= (uint16_t)~USART_DMAReq;
   }
 }
 
@@ -1229,15 +1229,15 @@ void USART_ITConfig(USART_TypeDef* USARTx, uint16_t USART_IT, FunctionalState Ne
   itpos = USART_IT & IT_MASK;
   itmask = (((uint32_t)0x01) << itpos);
     
-  if (usartreg == 0x01) /* The IT is in CR1 register */
+  if (usartreg == 0x01) /* The IT is in cr1 register */
   {
     usartxbase += 0x0C;
   }
-  else if (usartreg == 0x02) /* The IT is in CR2 register */
+  else if (usartreg == 0x02) /* The IT is in cr2 register */
   {
     usartxbase += 0x10;
   }
-  else /* The IT is in CR3 register */
+  else /* The IT is in cr3 register */
   {
     usartxbase += 0x14; 
   }
@@ -1372,17 +1372,17 @@ ITStatus USART_GetITStatus(USART_TypeDef* USARTx, uint16_t USART_IT)
   itmask = USART_IT & IT_MASK;
   itmask = (uint32_t)0x01 << itmask;
   
-  if (usartreg == 0x01) /* The IT  is in CR1 register */
+  if (usartreg == 0x01) /* The IT  is in cr1 register */
   {
-    itmask &= USARTx->CR1;
+    itmask &= USARTx->cr1;
   }
-  else if (usartreg == 0x02) /* The IT  is in CR2 register */
+  else if (usartreg == 0x02) /* The IT  is in cr2 register */
   {
-    itmask &= USARTx->CR2;
+    itmask &= USARTx->cr2;
   }
-  else /* The IT  is in CR3 register */
+  else /* The IT  is in cr3 register */
   {
-    itmask &= USARTx->CR3;
+    itmask &= USARTx->cr3;
   }
   
   bitpos = USART_IT >> 0x08;

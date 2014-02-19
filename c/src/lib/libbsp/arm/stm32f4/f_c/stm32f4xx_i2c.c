@@ -187,9 +187,9 @@ void I2C_Init(I2C_TypeDef* I2Cx, I2C_InitTypeDef* I2C_InitStruct)
   assert_param(IS_I2C_ACK_STATE(I2C_InitStruct->I2C_Ack));
   assert_param(IS_I2C_ACKNOWLEDGE_ADDRESS(I2C_InitStruct->I2C_AcknowledgedAddress));
 
-/*---------------------------- I2Cx CR2 Configuration ------------------------*/
-  /* Get the I2Cx CR2 value */
-  tmpreg = I2Cx->CR2;
+/*---------------------------- I2Cx cr2 Configuration ------------------------*/
+  /* Get the I2Cx cr2 value */
+  tmpreg = I2Cx->cr2;
   /* Clear frequency FREQ[5:0] bits */
   tmpreg &= (uint16_t)~((uint16_t)I2C_CR2_FREQ);
   /* Get pclk1 frequency value */
@@ -198,12 +198,12 @@ void I2C_Init(I2C_TypeDef* I2Cx, I2C_InitTypeDef* I2C_InitStruct)
   /* Set frequency bits depending on pclk1 value */
   freqrange = (uint16_t)(pclk1 / 1000000);
   tmpreg |= freqrange;
-  /* Write to I2Cx CR2 */
-  I2Cx->CR2 = tmpreg;
+  /* Write to I2Cx cr2 */
+  I2Cx->cr2 = tmpreg;
 
 /*---------------------------- I2Cx CCR Configuration ------------------------*/
   /* Disable the selected I2C peripheral to configure TRISE */
-  I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_PE);
+  I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_PE);
   /* Reset tmpreg value */
   /* Clear F/S, DUTY and CCR[11:0] bits */
   tmpreg = 0;
@@ -257,19 +257,19 @@ void I2C_Init(I2C_TypeDef* I2Cx, I2C_InitTypeDef* I2C_InitStruct)
   /* Write to I2Cx CCR */
   I2Cx->CCR = tmpreg;
   /* Enable the selected I2C peripheral */
-  I2Cx->CR1 |= I2C_CR1_PE;
+  I2Cx->cr1 |= I2C_CR1_PE;
 
-/*---------------------------- I2Cx CR1 Configuration ------------------------*/
-  /* Get the I2Cx CR1 value */
-  tmpreg = I2Cx->CR1;
+/*---------------------------- I2Cx cr1 Configuration ------------------------*/
+  /* Get the I2Cx cr1 value */
+  tmpreg = I2Cx->cr1;
   /* Clear ACK, SMBTYPE and  SMBUS bits */
   tmpreg &= CR1_CLEAR_MASK;
   /* Configure I2Cx: mode and acknowledgement */
   /* Set SMBTYPE and SMBUS bits according to I2C_Mode value */
   /* Set ACK bit according to I2C_Ack value */
   tmpreg |= (uint16_t)((uint32_t)I2C_InitStruct->I2C_Mode | I2C_InitStruct->I2C_Ack);
-  /* Write to I2Cx CR1 */
-  I2Cx->CR1 = tmpreg;
+  /* Write to I2Cx cr1 */
+  I2Cx->cr1 = tmpreg;
 
 /*---------------------------- I2Cx OAR1 Configuration -----------------------*/
   /* Set I2Cx Own Address1 and acknowledged address */
@@ -313,12 +313,12 @@ void I2C_Cmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C peripheral */
-    I2Cx->CR1 |= I2C_CR1_PE;
+    I2Cx->cr1 |= I2C_CR1_PE;
   }
   else
   {
     /* Disable the selected I2C peripheral */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_PE);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_PE);
   }
 }
 
@@ -337,12 +337,12 @@ void I2C_GenerateSTART(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Generate a START condition */
-    I2Cx->CR1 |= I2C_CR1_START;
+    I2Cx->cr1 |= I2C_CR1_START;
   }
   else
   {
     /* Disable the START condition generation */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_START);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_START);
   }
 }
 
@@ -361,12 +361,12 @@ void I2C_GenerateSTOP(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Generate a STOP condition */
-    I2Cx->CR1 |= I2C_CR1_STOP;
+    I2Cx->cr1 |= I2C_CR1_STOP;
   }
   else
   {
     /* Disable the STOP condition generation */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_STOP);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_STOP);
   }
 }
 
@@ -416,12 +416,12 @@ void I2C_AcknowledgeConfig(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the acknowledgement */
-    I2Cx->CR1 |= I2C_CR1_ACK;
+    I2Cx->cr1 |= I2C_CR1_ACK;
   }
   else
   {
     /* Disable the acknowledgement */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_ACK);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_ACK);
   }
 }
 
@@ -490,12 +490,12 @@ void I2C_GeneralCallCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable generall call */
-    I2Cx->CR1 |= I2C_CR1_ENGC;
+    I2Cx->cr1 |= I2C_CR1_ENGC;
   }
   else
   {
     /* Disable generall call */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_ENGC);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_ENGC);
   }
 }
 
@@ -516,12 +516,12 @@ void I2C_SoftwareResetCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Peripheral under reset */
-    I2Cx->CR1 |= I2C_CR1_SWRST;
+    I2Cx->cr1 |= I2C_CR1_SWRST;
   }
   else
   {
     /* Peripheral not under reset */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_SWRST);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_SWRST);
   }
 }
 
@@ -540,12 +540,12 @@ void I2C_StretchClockCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState == DISABLE)
   {
     /* Enable the selected I2C Clock stretching */
-    I2Cx->CR1 |= I2C_CR1_NOSTRETCH;
+    I2Cx->cr1 |= I2C_CR1_NOSTRETCH;
   }
   else
   {
     /* Disable the selected I2C Clock stretching */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_NOSTRETCH);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_NOSTRETCH);
   }
 }
 
@@ -606,12 +606,12 @@ void I2C_NACKPositionConfig(I2C_TypeDef* I2Cx, uint16_t I2C_NACKPosition)
   if (I2C_NACKPosition == I2C_NACKPosition_Next)
   {
     /* Next byte in shift register is the last received byte */
-    I2Cx->CR1 |= I2C_NACKPosition_Next;
+    I2Cx->cr1 |= I2C_NACKPosition_Next;
   }
   else
   {
     /* Current byte in shift register is the last received byte */
-    I2Cx->CR1 &= I2C_NACKPosition_Current;
+    I2Cx->cr1 &= I2C_NACKPosition_Current;
   }
 }
 
@@ -632,12 +632,12 @@ void I2C_SMBusAlertConfig(I2C_TypeDef* I2Cx, uint16_t I2C_SMBusAlert)
   if (I2C_SMBusAlert == I2C_SMBusAlert_Low)
   {
     /* Drive the SMBusAlert pin Low */
-    I2Cx->CR1 |= I2C_SMBusAlert_Low;
+    I2Cx->cr1 |= I2C_SMBusAlert_Low;
   }
   else
   {
     /* Drive the SMBusAlert pin High  */
-    I2Cx->CR1 &= I2C_SMBusAlert_High;
+    I2Cx->cr1 &= I2C_SMBusAlert_High;
   }
 }
 
@@ -656,12 +656,12 @@ void I2C_ARPCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C ARP */
-    I2Cx->CR1 |= I2C_CR1_ENARP;
+    I2Cx->cr1 |= I2C_CR1_ENARP;
   }
   else
   {
     /* Disable the selected I2C ARP */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_ENARP);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_ENARP);
   }
 }
 /**
@@ -738,12 +738,12 @@ void I2C_TransmitPEC(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C PEC transmission */
-    I2Cx->CR1 |= I2C_CR1_PEC;
+    I2Cx->cr1 |= I2C_CR1_PEC;
   }
   else
   {
     /* Disable the selected I2C PEC transmission */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_PEC);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_PEC);
   }
 }
 
@@ -769,12 +769,12 @@ void I2C_PECPositionConfig(I2C_TypeDef* I2Cx, uint16_t I2C_PECPosition)
   if (I2C_PECPosition == I2C_PECPosition_Next)
   {
     /* Next byte in shift register is PEC */
-    I2Cx->CR1 |= I2C_PECPosition_Next;
+    I2Cx->cr1 |= I2C_PECPosition_Next;
   }
   else
   {
     /* Current byte in shift register is PEC */
-    I2Cx->CR1 &= I2C_PECPosition_Current;
+    I2Cx->cr1 &= I2C_PECPosition_Current;
   }
 }
 
@@ -793,12 +793,12 @@ void I2C_CalculatePEC(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C PEC calculation */
-    I2Cx->CR1 |= I2C_CR1_ENPEC;
+    I2Cx->cr1 |= I2C_CR1_ENPEC;
   }
   else
   {
     /* Disable the selected I2C PEC calculation */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_ENPEC);
+    I2Cx->cr1 &= (uint16_t)~((uint16_t)I2C_CR1_ENPEC);
   }
 }
 
@@ -848,12 +848,12 @@ void I2C_DMACmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C DMA requests */
-    I2Cx->CR2 |= I2C_CR2_DMAEN;
+    I2Cx->cr2 |= I2C_CR2_DMAEN;
   }
   else
   {
     /* Disable the selected I2C DMA requests */
-    I2Cx->CR2 &= (uint16_t)~((uint16_t)I2C_CR2_DMAEN);
+    I2Cx->cr2 &= (uint16_t)~((uint16_t)I2C_CR2_DMAEN);
   }
 }
 
@@ -872,12 +872,12 @@ void I2C_DMALastTransferCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Next DMA transfer is the last transfer */
-    I2Cx->CR2 |= I2C_CR2_LAST;
+    I2Cx->cr2 |= I2C_CR2_LAST;
   }
   else
   {
     /* Next DMA transfer is not the last transfer */
-    I2Cx->CR2 &= (uint16_t)~((uint16_t)I2C_CR2_LAST);
+    I2Cx->cr2 &= (uint16_t)~((uint16_t)I2C_CR2_LAST);
   }
 }
 
@@ -991,8 +991,8 @@ void I2C_DMALastTransferCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
   * @brief  Reads the specified I2C register and returns its value.
   * @param  I2C_Register: specifies the register to read.
   *          This parameter can be one of the following values:
-  *            @arg I2C_Register_CR1:  CR1 register.
-  *            @arg I2C_Register_CR2:   CR2 register.
+  *            @arg I2C_Register_CR1:  cr1 register.
+  *            @arg I2C_Register_CR2:   cr2 register.
   *            @arg I2C_Register_OAR1:  OAR1 register.
   *            @arg I2C_Register_OAR2:  OAR2 register.
   *            @arg I2C_Register_DR:    DR register.
@@ -1039,12 +1039,12 @@ void I2C_ITConfig(I2C_TypeDef* I2Cx, uint16_t I2C_IT, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C interrupts */
-    I2Cx->CR2 |= I2C_IT;
+    I2Cx->cr2 |= I2C_IT;
   }
   else
   {
     /* Disable the selected I2C interrupts */
-    I2Cx->CR2 &= (uint16_t)~I2C_IT;
+    I2Cx->cr2 &= (uint16_t)~I2C_IT;
   }
 }
 
@@ -1312,7 +1312,7 @@ ITStatus I2C_GetITStatus(I2C_TypeDef* I2Cx, uint32_t I2C_IT)
   assert_param(IS_I2C_GET_IT(I2C_IT));
 
   /* Check if the interrupt source is enabled or not */
-  enablestatus = (uint32_t)(((I2C_IT & ITEN_MASK) >> 16) & (I2Cx->CR2)) ;
+  enablestatus = (uint32_t)(((I2C_IT & ITEN_MASK) >> 16) & (I2Cx->cr2)) ;
   
   /* Get bit[23:0] of the flag */
   I2C_IT &= FLAG_MASK;

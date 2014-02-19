@@ -272,9 +272,9 @@ void SPI_Init(SPI_TypeDef* SPIx, SPI_InitTypeDef* SPI_InitStruct)
   assert_param(IS_SPI_FIRST_BIT(SPI_InitStruct->SPI_FirstBit));
   assert_param(IS_SPI_CRC_POLYNOMIAL(SPI_InitStruct->SPI_CRCPolynomial));
 
-/*---------------------------- SPIx CR1 Configuration ------------------------*/
-  /* Get the SPIx CR1 value */
-  tmpreg = SPIx->CR1;
+/*---------------------------- SPIx cr1 Configuration ------------------------*/
+  /* Get the SPIx cr1 value */
+  tmpreg = SPIx->cr1;
   /* Clear BIDIMode, BIDIOE, RxONLY, SSM, SSI, LSBFirst, BR, MSTR, CPOL and CPHA bits */
   tmpreg &= CR1_CLEAR_MASK;
   /* Configure SPIx: direction, NSS management, first transmitted bit, BaudRate prescaler
@@ -289,8 +289,8 @@ void SPI_Init(SPI_TypeDef* SPIx, SPI_InitTypeDef* SPI_InitStruct)
                   SPI_InitStruct->SPI_DataSize | SPI_InitStruct->SPI_CPOL |  
                   SPI_InitStruct->SPI_CPHA | SPI_InitStruct->SPI_NSS |  
                   SPI_InitStruct->SPI_BaudRatePrescaler | SPI_InitStruct->SPI_FirstBit);
-  /* Write to SPIx CR1 */
-  SPIx->CR1 = tmpreg;
+  /* Write to SPIx cr1 */
+  SPIx->cr1 = tmpreg;
 
   /* Activate the SPI mode (Reset I2SMOD bit in I2SCFGR register) */
   SPIx->I2SCFGR &= (uint16_t)~((uint16_t)SPI_I2SCFGR_I2SMOD);
@@ -515,12 +515,12 @@ void SPI_Cmd(SPI_TypeDef* SPIx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI peripheral */
-    SPIx->CR1 |= SPI_CR1_SPE;
+    SPIx->cr1 |= SPI_CR1_SPE;
   }
   else
   {
     /* Disable the selected SPI peripheral */
-    SPIx->CR1 &= (uint16_t)~((uint16_t)SPI_CR1_SPE);
+    SPIx->cr1 &= (uint16_t)~((uint16_t)SPI_CR1_SPE);
   }
 }
 
@@ -565,9 +565,9 @@ void SPI_DataSizeConfig(SPI_TypeDef* SPIx, uint16_t SPI_DataSize)
   assert_param(IS_SPI_ALL_PERIPH(SPIx));
   assert_param(IS_SPI_DATASIZE(SPI_DataSize));
   /* Clear DFF bit */
-  SPIx->CR1 &= (uint16_t)~SPI_DataSize_16b;
+  SPIx->cr1 &= (uint16_t)~SPI_DataSize_16b;
   /* Set new DFF bit value */
-  SPIx->CR1 |= SPI_DataSize;
+  SPIx->cr1 |= SPI_DataSize;
 }
 
 /**
@@ -587,12 +587,12 @@ void SPI_BiDirectionalLineConfig(SPI_TypeDef* SPIx, uint16_t SPI_Direction)
   if (SPI_Direction == SPI_Direction_Tx)
   {
     /* Set the Tx only mode */
-    SPIx->CR1 |= SPI_Direction_Tx;
+    SPIx->cr1 |= SPI_Direction_Tx;
   }
   else
   {
     /* Set the Rx only mode */
-    SPIx->CR1 &= SPI_Direction_Rx;
+    SPIx->cr1 &= SPI_Direction_Rx;
   }
 }
 
@@ -613,12 +613,12 @@ void SPI_NSSInternalSoftwareConfig(SPI_TypeDef* SPIx, uint16_t SPI_NSSInternalSo
   if (SPI_NSSInternalSoft != SPI_NSSInternalSoft_Reset)
   {
     /* Set NSS pin internally by software */
-    SPIx->CR1 |= SPI_NSSInternalSoft_Set;
+    SPIx->cr1 |= SPI_NSSInternalSoft_Set;
   }
   else
   {
     /* Reset NSS pin internally by software */
-    SPIx->CR1 &= SPI_NSSInternalSoft_Reset;
+    SPIx->cr1 &= SPI_NSSInternalSoft_Reset;
   }
 }
 
@@ -637,12 +637,12 @@ void SPI_SSOutputCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI SS output */
-    SPIx->CR2 |= (uint16_t)SPI_CR2_SSOE;
+    SPIx->cr2 |= (uint16_t)SPI_CR2_SSOE;
   }
   else
   {
     /* Disable the selected SPI SS output */
-    SPIx->CR2 &= (uint16_t)~((uint16_t)SPI_CR2_SSOE);
+    SPIx->cr2 &= (uint16_t)~((uint16_t)SPI_CR2_SSOE);
   }
 }
 
@@ -669,12 +669,12 @@ void SPI_TIModeCmd(SPI_TypeDef* SPIx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the TI mode for the selected SPI peripheral */
-    SPIx->CR2 |= SPI_CR2_FRF;
+    SPIx->cr2 |= SPI_CR2_FRF;
   }
   else
   {
     /* Disable the TI mode for the selected SPI peripheral */
-    SPIx->CR2 &= (uint16_t)~SPI_CR2_FRF;
+    SPIx->cr2 &= (uint16_t)~SPI_CR2_FRF;
   }
 }
 
@@ -885,12 +885,12 @@ void SPI_CalculateCRC(SPI_TypeDef* SPIx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI CRC calculation */
-    SPIx->CR1 |= SPI_CR1_CRCEN;
+    SPIx->cr1 |= SPI_CR1_CRCEN;
   }
   else
   {
     /* Disable the selected SPI CRC calculation */
-    SPIx->CR1 &= (uint16_t)~((uint16_t)SPI_CR1_CRCEN);
+    SPIx->cr1 &= (uint16_t)~((uint16_t)SPI_CR1_CRCEN);
   }
 }
 
@@ -905,7 +905,7 @@ void SPI_TransmitCRC(SPI_TypeDef* SPIx)
   assert_param(IS_SPI_ALL_PERIPH(SPIx));
   
   /* Enable the selected SPI CRC transmission */
-  SPIx->CR1 |= SPI_CR1_CRCNEXT;
+  SPIx->cr1 |= SPI_CR1_CRCNEXT;
 }
 
 /**
@@ -989,12 +989,12 @@ void SPI_I2S_DMACmd(SPI_TypeDef* SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState 
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI DMA requests */
-    SPIx->CR2 |= SPI_I2S_DMAReq;
+    SPIx->cr2 |= SPI_I2S_DMAReq;
   }
   else
   {
     /* Disable the selected SPI DMA requests */
-    SPIx->CR2 &= (uint16_t)~SPI_I2S_DMAReq;
+    SPIx->cr2 &= (uint16_t)~SPI_I2S_DMAReq;
   }
 }
 
@@ -1106,12 +1106,12 @@ void SPI_I2S_ITConfig(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT, FunctionalState New
   if (NewState != DISABLE)
   {
     /* Enable the selected SPI interrupt */
-    SPIx->CR2 |= itmask;
+    SPIx->cr2 |= itmask;
   }
   else
   {
     /* Disable the selected SPI interrupt */
-    SPIx->CR2 &= (uint16_t)~itmask;
+    SPIx->cr2 &= (uint16_t)~itmask;
   }
 }
 
@@ -1217,7 +1217,7 @@ ITStatus SPI_I2S_GetITStatus(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT)
   itmask = 0x01 << itmask;
 
   /* Get the SPI_I2S_IT enable bit status */
-  enablestatus = (SPIx->CR2 & itmask) ;
+  enablestatus = (SPIx->cr2 & itmask) ;
 
   /* Check the status of the specified SPI interrupt */
   if (((SPIx->SR & itpos) != (uint16_t)RESET) && enablestatus)

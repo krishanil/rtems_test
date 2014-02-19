@@ -119,7 +119,7 @@
 /* ADC Analog watchdog enable mode mask */
 #define CR1_AWDMode_RESET         ((uint32_t)0xFF3FFDFF)   
 
-/* CR1 register Mask */
+/* cr1 register Mask */
 #define CR1_CLEAR_MASK            ((uint32_t)0xFCFFFEFF)
 
 /* ADC EXTEN mask */
@@ -131,7 +131,7 @@
 /* ADC JEXTSEL mask */
 #define CR2_JEXTSEL_RESET         ((uint32_t)0xFFF0FFFF)  
 
-/* CR2 register Mask */
+/* cr2 register Mask */
 #define CR2_CLEAR_MASK            ((uint32_t)0xC0FFF7FD)
 
 /* ADC SQx mask */
@@ -239,9 +239,9 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
   assert_param(IS_ADC_DATA_ALIGN(ADC_InitStruct->ADC_DataAlign)); 
   assert_param(IS_ADC_REGULAR_LENGTH(ADC_InitStruct->ADC_NbrOfConversion));
   
-  /*---------------------------- ADCx CR1 Configuration -----------------*/
-  /* Get the ADCx CR1 value */
-  tmpreg1 = ADCx->CR1;
+  /*---------------------------- ADCx cr1 Configuration -----------------*/
+  /* Get the ADCx cr1 value */
+  tmpreg1 = ADCx->cr1;
   
   /* Clear RES and SCAN bits */
   tmpreg1 &= CR1_CLEAR_MASK;
@@ -251,11 +251,11 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
   /* Set RES bit according to ADC_Resolution value */ 
   tmpreg1 |= (uint32_t)(((uint32_t)ADC_InitStruct->ADC_ScanConvMode << 8) | \
                                    ADC_InitStruct->ADC_Resolution);
-  /* Write to ADCx CR1 */
-  ADCx->CR1 = tmpreg1;
-  /*---------------------------- ADCx CR2 Configuration -----------------*/
-  /* Get the ADCx CR2 value */
-  tmpreg1 = ADCx->CR2;
+  /* Write to ADCx cr1 */
+  ADCx->cr1 = tmpreg1;
+  /*---------------------------- ADCx cr2 Configuration -----------------*/
+  /* Get the ADCx cr2 value */
+  tmpreg1 = ADCx->cr2;
   
   /* Clear CONT, ALIGN, EXTEN and EXTSEL bits */
   tmpreg1 &= CR2_CLEAR_MASK;
@@ -271,8 +271,8 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
                         ADC_InitStruct->ADC_ExternalTrigConvEdge | \
                         ((uint32_t)ADC_InitStruct->ADC_ContinuousConvMode << 1));
                         
-  /* Write to ADCx CR2 */
-  ADCx->CR2 = tmpreg1;
+  /* Write to ADCx cr2 */
+  ADCx->cr2 = tmpreg1;
   /*---------------------------- ADCx SQR1 Configuration -----------------*/
   /* Get the ADCx SQR1 value */
   tmpreg1 = ADCx->SQR1;
@@ -397,12 +397,12 @@ void ADC_Cmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Set the ADON bit to wake up the ADC from power down mode */
-    ADCx->CR2 |= (uint32_t)ADC_CR2_ADON;
+    ADCx->cr2 |= (uint32_t)ADC_CR2_ADON;
   }
   else
   {
     /* Disable the selected ADC peripheral */
-    ADCx->CR2 &= (uint32_t)(~ADC_CR2_ADON);
+    ADCx->cr2 &= (uint32_t)(~ADC_CR2_ADON);
   }
 }
 /**
@@ -455,7 +455,7 @@ void ADC_AnalogWatchdogCmd(ADC_TypeDef* ADCx, uint32_t ADC_AnalogWatchdog)
   assert_param(IS_ADC_ANALOG_WATCHDOG(ADC_AnalogWatchdog));
   
   /* Get the old register value */
-  tmpreg = ADCx->CR1;
+  tmpreg = ADCx->cr1;
   
   /* Clear AWDEN, JAWDEN and AWDSGL bits */
   tmpreg &= CR1_AWDMode_RESET;
@@ -464,7 +464,7 @@ void ADC_AnalogWatchdogCmd(ADC_TypeDef* ADCx, uint32_t ADC_AnalogWatchdog)
   tmpreg |= ADC_AnalogWatchdog;
   
   /* Store the new register value */
-  ADCx->CR1 = tmpreg;
+  ADCx->cr1 = tmpreg;
 }
 
 /**
@@ -525,7 +525,7 @@ void ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef* ADCx, uint8_t ADC_Channe
   assert_param(IS_ADC_CHANNEL(ADC_Channel));
   
   /* Get the old register value */
-  tmpreg = ADCx->CR1;
+  tmpreg = ADCx->cr1;
   
   /* Clear the Analog watchdog channel select bits */
   tmpreg &= CR1_AWDCH_RESET;
@@ -534,7 +534,7 @@ void ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef* ADCx, uint8_t ADC_Channe
   tmpreg |= ADC_Channel;
   
   /* Store the new register value */
-  ADCx->CR1 = tmpreg;
+  ADCx->cr1 = tmpreg;
 }
 /**
   * @}
@@ -831,7 +831,7 @@ void ADC_SoftwareStartConv(ADC_TypeDef* ADCx)
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   
   /* Enable the selected ADC conversion for regular group */
-  ADCx->CR2 |= (uint32_t)ADC_CR2_SWSTART;
+  ADCx->cr2 |= (uint32_t)ADC_CR2_SWSTART;
 }
 
 /**
@@ -846,7 +846,7 @@ FlagStatus ADC_GetSoftwareStartConvStatus(ADC_TypeDef* ADCx)
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   
   /* Check the status of SWSTART bit */
-  if ((ADCx->CR2 & ADC_CR2_JSWSTART) != (uint32_t)RESET)
+  if ((ADCx->cr2 & ADC_CR2_JSWSTART) != (uint32_t)RESET)
   {
     /* SWSTART bit is set */
     bitstatus = SET;
@@ -878,12 +878,12 @@ void ADC_EOCOnEachRegularChannelCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC EOC rising on each regular channel conversion */
-    ADCx->CR2 |= (uint32_t)ADC_CR2_EOCS;
+    ADCx->cr2 |= (uint32_t)ADC_CR2_EOCS;
   }
   else
   {
     /* Disable the selected ADC EOC rising on each regular channel conversion */
-    ADCx->CR2 &= (uint32_t)(~ADC_CR2_EOCS);
+    ADCx->cr2 &= (uint32_t)(~ADC_CR2_EOCS);
   }
 }
 
@@ -903,12 +903,12 @@ void ADC_ContinuousModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC continuous conversion mode */
-    ADCx->CR2 |= (uint32_t)ADC_CR2_CONT;
+    ADCx->cr2 |= (uint32_t)ADC_CR2_CONT;
   }
   else
   {
     /* Disable the selected ADC continuous conversion mode */
-    ADCx->CR2 &= (uint32_t)(~ADC_CR2_CONT);
+    ADCx->cr2 &= (uint32_t)(~ADC_CR2_CONT);
   }
 }
 
@@ -930,7 +930,7 @@ void ADC_DiscModeChannelCountConfig(ADC_TypeDef* ADCx, uint8_t Number)
   assert_param(IS_ADC_REGULAR_DISC_NUMBER(Number));
   
   /* Get the old register value */
-  tmpreg1 = ADCx->CR1;
+  tmpreg1 = ADCx->cr1;
   
   /* Clear the old discontinuous mode channel count */
   tmpreg1 &= CR1_DISCNUM_RESET;
@@ -940,7 +940,7 @@ void ADC_DiscModeChannelCountConfig(ADC_TypeDef* ADCx, uint8_t Number)
   tmpreg1 |= tmpreg2 << 13;
   
   /* Store the new register value */
-  ADCx->CR1 = tmpreg1;
+  ADCx->cr1 = tmpreg1;
 }
 
 /**
@@ -961,12 +961,12 @@ void ADC_DiscModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC regular discontinuous mode */
-    ADCx->CR1 |= (uint32_t)ADC_CR1_DISCEN;
+    ADCx->cr1 |= (uint32_t)ADC_CR1_DISCEN;
   }
   else
   {
     /* Disable the selected ADC regular discontinuous mode */
-    ADCx->CR1 &= (uint32_t)(~ADC_CR1_DISCEN);
+    ADCx->cr1 &= (uint32_t)(~ADC_CR1_DISCEN);
   }
 }
 
@@ -1053,12 +1053,12 @@ void ADC_DMACmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC DMA request */
-    ADCx->CR2 |= (uint32_t)ADC_CR2_DMA;
+    ADCx->cr2 |= (uint32_t)ADC_CR2_DMA;
   }
   else
   {
     /* Disable the selected ADC DMA request */
-    ADCx->CR2 &= (uint32_t)(~ADC_CR2_DMA);
+    ADCx->cr2 &= (uint32_t)(~ADC_CR2_DMA);
   }
 }
 
@@ -1077,12 +1077,12 @@ void ADC_DMARequestAfterLastTransferCmd(ADC_TypeDef* ADCx, FunctionalState NewSt
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC DMA request after last transfer */
-    ADCx->CR2 |= (uint32_t)ADC_CR2_DDS;
+    ADCx->cr2 |= (uint32_t)ADC_CR2_DDS;
   }
   else
   {
     /* Disable the selected ADC DMA request after last transfer */
-    ADCx->CR2 &= (uint32_t)(~ADC_CR2_DDS);
+    ADCx->cr2 &= (uint32_t)(~ADC_CR2_DDS);
   }
 }
 
@@ -1327,7 +1327,7 @@ void ADC_ExternalTrigInjectedConvConfig(ADC_TypeDef* ADCx, uint32_t ADC_External
   assert_param(IS_ADC_EXT_INJEC_TRIG(ADC_ExternalTrigInjecConv));
   
   /* Get the old register value */
-  tmpreg = ADCx->CR2;
+  tmpreg = ADCx->cr2;
   
   /* Clear the old external event selection for injected group */
   tmpreg &= CR2_JEXTSEL_RESET;
@@ -1336,7 +1336,7 @@ void ADC_ExternalTrigInjectedConvConfig(ADC_TypeDef* ADCx, uint32_t ADC_External
   tmpreg |= ADC_ExternalTrigInjecConv;
   
   /* Store the new register value */
-  ADCx->CR2 = tmpreg;
+  ADCx->cr2 = tmpreg;
 }
 
 /**
@@ -1360,13 +1360,13 @@ void ADC_ExternalTrigInjectedConvEdgeConfig(ADC_TypeDef* ADCx, uint32_t ADC_Exte
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   assert_param(IS_ADC_EXT_INJEC_TRIG_EDGE(ADC_ExternalTrigInjecConvEdge));
   /* Get the old register value */
-  tmpreg = ADCx->CR2;
+  tmpreg = ADCx->cr2;
   /* Clear the old external trigger edge for injected group */
   tmpreg &= CR2_JEXTEN_RESET;
   /* Set the new external trigger edge for injected group */
   tmpreg |= ADC_ExternalTrigInjecConvEdge;
   /* Store the new register value */
-  ADCx->CR2 = tmpreg;
+  ADCx->cr2 = tmpreg;
 }
 
 /**
@@ -1379,7 +1379,7 @@ void ADC_SoftwareStartInjectedConv(ADC_TypeDef* ADCx)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   /* Enable the selected ADC conversion for injected group */
-  ADCx->CR2 |= (uint32_t)ADC_CR2_JSWSTART;
+  ADCx->cr2 |= (uint32_t)ADC_CR2_JSWSTART;
 }
 
 /**
@@ -1394,7 +1394,7 @@ FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_TypeDef* ADCx)
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   
   /* Check the status of JSWSTART bit */
-  if ((ADCx->CR2 & ADC_CR2_JSWSTART) != (uint32_t)RESET)
+  if ((ADCx->cr2 & ADC_CR2_JSWSTART) != (uint32_t)RESET)
   {
     /* JSWSTART bit is set */
     bitstatus = SET;
@@ -1424,12 +1424,12 @@ void ADC_AutoInjectedConvCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC automatic injected group conversion */
-    ADCx->CR1 |= (uint32_t)ADC_CR1_JAUTO;
+    ADCx->cr1 |= (uint32_t)ADC_CR1_JAUTO;
   }
   else
   {
     /* Disable the selected ADC automatic injected group conversion */
-    ADCx->CR1 &= (uint32_t)(~ADC_CR1_JAUTO);
+    ADCx->cr1 &= (uint32_t)(~ADC_CR1_JAUTO);
   }
 }
 
@@ -1450,12 +1450,12 @@ void ADC_InjectedDiscModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC injected discontinuous mode */
-    ADCx->CR1 |= (uint32_t)ADC_CR1_JDISCEN;
+    ADCx->cr1 |= (uint32_t)ADC_CR1_JDISCEN;
   }
   else
   {
     /* Disable the selected ADC injected discontinuous mode */
-    ADCx->CR1 &= (uint32_t)(~ADC_CR1_JDISCEN);
+    ADCx->cr1 &= (uint32_t)(~ADC_CR1_JDISCEN);
   }
 }
 
@@ -1593,12 +1593,12 @@ void ADC_ITConfig(ADC_TypeDef* ADCx, uint16_t ADC_IT, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC interrupts */
-    ADCx->CR1 |= itmask;
+    ADCx->cr1 |= itmask;
   }
   else
   {
     /* Disable the selected ADC interrupts */
-    ADCx->CR1 &= (~(uint32_t)itmask);
+    ADCx->cr1 &= (~(uint32_t)itmask);
   }
 }
 
@@ -1684,7 +1684,7 @@ ITStatus ADC_GetITStatus(ADC_TypeDef* ADCx, uint16_t ADC_IT)
   itmask = ADC_IT >> 8;
 
   /* Get the ADC_IT enable bit status */
-  enablestatus = (ADCx->CR1 & ((uint32_t)0x01 << (uint8_t)ADC_IT)) ;
+  enablestatus = (ADCx->cr1 & ((uint32_t)0x01 << (uint8_t)ADC_IT)) ;
 
   /* Check the status of the specified ADC interrupt */
   if (((ADCx->SR & itmask) != (uint32_t)RESET) && enablestatus)
