@@ -43,6 +43,7 @@
 #include <bsp/stm32f4xx_gpio.h>
 #include <bsp/stm32f4xx_syscfg.h>
 #include <bsp/stm32f4xx_exti.h>
+#include "stm32f4_discovery_lis302dl.h"
 
 const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
 	{ \
@@ -126,8 +127,28 @@ static void stm32f4_key_handler(void *arg)
 		printk("%s, %d\n", __func__, __LINE__);
 	}	
 }
+#define delay(p) rtems_task_wake_after (RTEMS_MICROSECONDS_TO_TICKS (p))
 
 //void stm32f4_gpio_set_output(int pin, bool set);
+
+static void mems_init(void) {
+	LIS302DL_InitTypeDef  LIS302DL_InitStruct;
+	unsigned char temp = 0;
+	
+	/* Set configuration of LIS302DL*/
+	LIS302DL_InitStruct.Power_Mode = LIS302DL_LOWPOWERMODE_ACTIVE;
+	LIS302DL_InitStruct.Output_DataRate = LIS302DL_DATARATE_100;
+	LIS302DL_InitStruct.Axes_Enable = LIS302DL_X_ENABLE | LIS302DL_Y_ENABLE | LIS302DL_Z_ENABLE;
+	LIS302DL_InitStruct.Full_Scale = LIS302DL_FULLSCALE_2_3;
+	LIS302DL_InitStruct.Self_Test = LIS302DL_SELFTEST_NORMAL;
+	LIS302DL_Init(&LIS302DL_InitStruct);
+
+	delay(30);
+
+	LIS302DL_Read(&temp, LIS302DL_WHO_AM_I_ADDR, 1);
+
+	printf("who am i is 0x%x\n", temp);
+}
 
 static void xyos_menu (void)
 {
@@ -181,6 +202,9 @@ static void xyos_menu (void)
 	bsp_interrupt_vector_disable(STM32F4_IRQ_EXTI0);
 	stm32f4_rcc_set_clock(STM32F4_RCC_SYSCFG, true);
 	bsp_interrupt_vector_enable(STM32F4_IRQ_EXTI0);
+
+	mems_init();
+	
 	for (;;) {
 	fflush(stdout);
 

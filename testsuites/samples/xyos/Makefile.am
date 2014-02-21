@@ -1,6 +1,6 @@
 
 rtems_tests_PROGRAMS = xyos
-xyos_SOURCES = init.c system.h
+xyos_SOURCES = init.c stm32f4_discovery_lis302dl.c stm32f4_discovery_lis302dl.h system.h
 
 dist_rtems_tests_DATA = xyos.scn
 dist_rtems_tests_DATA += xyos.doc
