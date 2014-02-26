@@ -44,6 +44,7 @@
 #include <bsp/stm32f4xx_syscfg.h>
 #include <bsp/stm32f4xx_exti.h>
 #include "stm32f4_discovery_lis302dl.h"
+#include "stm32f4xxxx_spi.h"
 
 const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
 	{ \
@@ -130,7 +131,39 @@ static void stm32f4_key_handler(void *arg)
 #define delay(p) rtems_task_wake_after (RTEMS_MICROSECONDS_TO_TICKS (p))
 
 //void stm32f4_gpio_set_output(int pin, bool set);
+#if 1
+/* Read/Write command */
+#define READWRITE_CMD              ((uint8_t)0x80) 
+/* Multiple byte read/write command */ 
+#define MULTIPLEBYTE_CMD           ((uint8_t)0x40)
 
+static void mems_init(void) {
+	unsigned char temp = 0;
+	unsigned char addr = LIS302DL_WHO_AM_I_ADDR;
+	int NumByteToRead = 0x1;
+
+	if(NumByteToRead > 0x01)
+  {
+    addr |= (uint8_t)(READWRITE_CMD | MULTIPLEBYTE_CMD);
+  }
+  else
+  {
+    addr |= (uint8_t)READWRITE_CMD;
+  }
+
+	stm32f4_spi_1->ops->init(stm32f4_spi_1);
+	delay(30);
+	stm32f4_spi_1->ops->send_start(stm32f4_spi_1);
+	stm32f4_spi_1->ops->send_addr(stm32f4_spi_1, addr, 1);
+	stm32f4_spi_1->ops->read_bytes(stm32f4_spi_1, &temp, 1);
+	stm32f4_spi_1->ops->send_stop(stm32f4_spi_1);
+
+	//LIS302DL_Read(&temp, LIS302DL_WHO_AM_I_ADDR, 1);
+
+	printf("\nwho am i is 0x%x\n", temp);
+}
+
+#else
 static void mems_init(void) {
 	LIS302DL_InitTypeDef  LIS302DL_InitStruct;
 	unsigned char temp = 0;
@@ -147,8 +180,9 @@ static void mems_init(void) {
 
 	LIS302DL_Read(&temp, LIS302DL_WHO_AM_I_ADDR, 1);
 
-	printf("who am i is 0x%x\n", temp);
+	printf("\nwho am i is 0x%x\n", temp);
 }
+#endif
 
 static void xyos_menu (void)
 {
