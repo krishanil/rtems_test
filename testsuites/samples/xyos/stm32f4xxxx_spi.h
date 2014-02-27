@@ -27,6 +27,8 @@ extern rtems_libi2c_bus_t * const stm32f4_spi_2;
 
 extern rtems_libi2c_bus_t * const stm32f4_spi_3;
 
+rtems_status_code bsp_register_spi (void);
+
 /** @} */
 
 #ifdef __cplusplus

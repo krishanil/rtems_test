@@ -43,7 +43,6 @@
 #include <bsp/stm32f4xx_gpio.h>
 #include <bsp/stm32f4xx_syscfg.h>
 #include <bsp/stm32f4xx_exti.h>
-#include "stm32f4_discovery_lis302dl.h"
 #include "stm32f4xxxx_spi.h"
 
 const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
@@ -136,6 +135,7 @@ static void stm32f4_key_handler(void *arg)
 #define READWRITE_CMD              ((uint8_t)0x80) 
 /* Multiple byte read/write command */ 
 #define MULTIPLEBYTE_CMD           ((uint8_t)0x40)
+#define LIS302DL_WHO_AM_I_ADDR                  0x0F
 
 static void mems_init(void) {
 	unsigned char temp = 0;
