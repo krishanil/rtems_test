@@ -32,8 +32,6 @@
 /** @defgroup STM32F4_DISCOVERY_SPI_Macros
   * @{
   */
-#define SPI_CS_LOW()       GPIO_ResetBits(GPIOE, GPIO_Pin_3)
-#define SPI_CS_HIGH()      GPIO_SetBits(GPIOE, GPIO_Pin_3)
 /**
   * @}
   */ 
@@ -43,66 +41,147 @@ typedef struct {
   SPI_TypeDef *regs;
   unsigned clock;
   uint32_t idle_char;
+	const stm32f4_gpio_config *p_clk_mosi_miso;
+	const stm32f4_gpio_config *p_cs;
 } stm32f4_spi_bus_entry;
+
+const stm32f4_gpio_config stm32f4_spi1_config_gpio [] = {
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(0, 5), \
+		  .pin_last = STM32F4_GPIO_PIN(0, 7), \
+		  .mode = STM32F4_GPIO_MODE_AF, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_50_MHZ, \
+		  .pupd = STM32F4_GPIO_PULL_DOWN, \
+		  .output = 0, \
+		  .af = STM32F4_GPIO_AF_SPI1, \
+		  .reserved = 0\
+		} \
+	},
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(4, 3), \
+		  .pin_last = STM32F4_GPIO_PIN(4, 3), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_50_MHZ, \
+		  .pupd = STM32F4_GPIO_PULL_DOWN, \
+		  .output = 1, \
+		  .af = STM32F4_GPIO_AF_SPI1, \
+		  .reserved = 0\
+		} \
+	},
+  STM32F4_GPIO_CONFIG_TERMINAL
+};
+
+const stm32f4_gpio_config stm32f4_spi2_config_gpio [] = {
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(1, 13), \
+		  .pin_last = STM32F4_GPIO_PIN(1, 15), \
+		  .mode = STM32F4_GPIO_MODE_AF, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_50_MHZ, \
+		  .pupd = STM32F4_GPIO_PULL_DOWN, \
+		  .output = 0, \
+		  .af = STM32F4_GPIO_AF_SPI2, \
+		  .reserved = 0\
+		} \
+	},
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(4, 3), \
+		  .pin_last = STM32F4_GPIO_PIN(4, 3), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_50_MHZ, \
+		  .pupd = STM32F4_GPIO_PULL_DOWN, \
+		  .output = 1, \
+		  .af = STM32F4_GPIO_AF_SPI2, \
+		  .reserved = 0\
+		} \
+	},
+  STM32F4_GPIO_CONFIG_TERMINAL
+};
+
+const stm32f4_gpio_config stm32f4_spi3_config_gpio [] = {
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(2, 10), \
+		  .pin_last = STM32F4_GPIO_PIN(2, 12), \
+		  .mode = STM32F4_GPIO_MODE_AF, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_50_MHZ, \
+		  .pupd = STM32F4_GPIO_PULL_DOWN, \
+		  .output = 0, \
+		  .af = STM32F4_GPIO_AF_SPI3, \
+		  .reserved = 0\
+		} \
+	},
+	{ \
+		{ \
+		  .pin_first = STM32F4_GPIO_PIN(4, 3), \
+		  .pin_last = STM32F4_GPIO_PIN(4, 3), \
+		  .mode = STM32F4_GPIO_MODE_OUTPUT, \
+		  .otype = STM32F4_GPIO_OTYPE_PUSH_PULL, \
+		  .ospeed = STM32F4_GPIO_OSPEED_50_MHZ, \
+		  .pupd = STM32F4_GPIO_PULL_DOWN, \
+		  .output = 1, \
+		  .af = STM32F4_GPIO_AF_SPI3, \
+		  .reserved = 0\
+		} \
+	},
+  STM32F4_GPIO_CONFIG_TERMINAL
+};
 
 static rtems_status_code stm32f4_spi_init(rtems_libi2c_bus_t *bus)
 {
-  //rtems_status_code sc = RTEMS_SUCCESSFUL;
+  rtems_status_code sc = RTEMS_SUCCESSFUL;
   //rtems_interrupt_level level;
-  //stm32f4_spi_bus_entry *e = (stm32f4_spi_bus_entry *) bus;
-  //volatile SPI_TypeDef *regs = e->regs;
-	GPIO_InitTypeDef GPIO_InitStructure;
+  stm32f4_spi_bus_entry *e = (stm32f4_spi_bus_entry *) bus;
+  SPI_TypeDef *regs = e->regs;
+	//GPIO_InitTypeDef GPIO_InitStructure;
 	SPI_InitTypeDef  SPI_InitStructure;
+	const stm32f4_gpio_config *p_clk_mosi_miso_pin = NULL;
+	const stm32f4_gpio_config *p_cs_pin = NULL;
 
-	//switch (regs) {
-		//case SPI1_BASE:
+	//SPI_module1: (msk, miso, mosi)=(PA5, PA6, PA7)
+	//SPI_module2: (msk, miso, mosi)=(PB13, PB14, PB15)
+	//SPI_module3: (msk, miso, mosi)=(PC10, PC11, PC12) 
+	
+	/* Enable SCK, MOSI and MISO GPIO clocks */
+	/* SPI SCK pin configuration */
+	/* SPI	MOSI pin configuration */
+	/* SPI MISO pin configuration */
+	switch ((unsigned int)regs) {
+		case SPI1_BASE:
 			/* Enable the SPI periph */
   		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
+			p_clk_mosi_miso_pin = &stm32f4_spi1_config_gpio[0];
+			p_cs_pin = &stm32f4_spi1_config_gpio[1];
+			break;
+		case SPI2_BASE:
+			RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
+			p_clk_mosi_miso_pin = &stm32f4_spi2_config_gpio[0];
+			p_cs_pin = &stm32f4_spi2_config_gpio[1];
+			break;
+		case SPI3_BASE:
+			RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3, ENABLE);
+			p_clk_mosi_miso_pin = &stm32f4_spi3_config_gpio[0];
+			p_cs_pin = &stm32f4_spi3_config_gpio[1];
+			break;
+		default :
+			sc = RTEMS_INVALID_ADDRESS;
+			printk("%s, %d, addr error\n", __FILE__, __LINE__);
+			return sc;
+			break;
+	}
 
-			/* Enable SCK, MOSI and MISO GPIO clocks */
-			RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-
-			/* Enable CS	GPIO clock */
-			RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-
-			GPIO_PinAFConfig(GPIOA, GPIO_PinSource5, GPIO_AF_SPI1);
-			GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_SPI1);
-			GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_SPI1);
-			//break;
-		//case SPI2_BASE:
-			//RCC_APB2PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
-			//break;
-		//case SPI3_BASE:
-			//RCC_APB2PeriphClockCmd(RCC_APB1Periph_SPI3, ENABLE);
-			//break;
-		//default :
-			//sc = RTEMS_INVALID_ADDRESS;
-			//printk("%s, %d, addr error\n", __FILE__, __LINE__);
-			//return sc;
-			//break;
-	//}
-	
-	
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-
-  /* SPI SCK pin configuration */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  /* SPI  MOSI pin configuration */
-  GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_7;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  /* SPI MISO pin configuration */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
+	stm32f4_gpio_set_config(p_clk_mosi_miso_pin);
 	
   /* SPI configuration -------------------------------------------------------*/
-  SPI_I2S_DeInit((SPI_TypeDef *)SPI1_BASE);
+  SPI_I2S_DeInit(regs);
   SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
   SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
@@ -112,21 +191,15 @@ static rtems_status_code stm32f4_spi_init(rtems_libi2c_bus_t *bus)
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
   SPI_InitStructure.SPI_CRCPolynomial = 7;
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-  SPI_Init((SPI_TypeDef *)SPI1_BASE, &SPI_InitStructure);
+  SPI_Init(regs, &SPI_InitStructure);
 
 	/* Enable SPI1  */
-  SPI_Cmd((SPI_TypeDef *)SPI1_BASE, ENABLE);
+  SPI_Cmd(regs, ENABLE);
 
-	
-  /* Configure GPIO PIN for Lis Chip select */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOE, &GPIO_InitStructure);
-
+	/* Enable CS	GPIO clock */
+	/* Configure GPIO PIN for Lis Chip select */
 	/* Deselect : Chip Select high */
-  GPIO_SetBits(GPIOE, GPIO_Pin_3);
+	stm32f4_gpio_set_config(p_cs_pin);
 
 	return RTEMS_SUCCESSFUL;
 }
@@ -134,21 +207,23 @@ static rtems_status_code stm32f4_spi_init(rtems_libi2c_bus_t *bus)
 static rtems_status_code stm32f4_spi_send_start(rtems_libi2c_bus_t *bus)
 {
 	/* Set chip select Low at the start of the transmission */
-	SPI_CS_LOW();
+	stm32f4_spi_bus_entry *e = (stm32f4_spi_bus_entry *) bus;
+	stm32f4_gpio_set_output(e->p_cs->fields.pin_first, false);
   return RTEMS_SUCCESSFUL;
 }
 
 static rtems_status_code stm32f4_spi_send_stop(rtems_libi2c_bus_t *bus)
 {
-	/* Set chip select High at the end of the transmission */ 
-  SPI_CS_HIGH();
-  return RTEMS_SUCCESSFUL;
+	/* Set chip select High at the end of the transmission */
+	stm32f4_spi_bus_entry *e = (stm32f4_spi_bus_entry *) bus;
+	stm32f4_gpio_set_output(e->p_cs->fields.pin_first, true);
+	return RTEMS_SUCCESSFUL;
 }
 
 #define SPI_R_FLAG		0x1
 #define SPI_W_FLAG		0x2
 
-#define SPI_FLAG_TIMEOUT ((uint32_t)0x1000)
+//#define SPI_FLAG_TIMEOUT ((uint32_t)0x1000)
 
 
 static int stm32f4_spi_read_write(
@@ -158,8 +233,8 @@ static int stm32f4_spi_read_write(
   int n
 )
 {
-  //stm32f4_spi_bus_entry *e = (stm32f4_spi_bus_entry *) bus;
-  //volatile SPI_TypeDef *regs = e->regs;
+  stm32f4_spi_bus_entry *e = (stm32f4_spi_bus_entry *) bus;
+  SPI_TypeDef *regs = e->regs;
   //int r = 0;
   //int w = 0;
   //int dr = 1;
@@ -168,7 +243,7 @@ static int stm32f4_spi_read_write(
   //unsigned char trash = 0;
   //unsigned char idle_char = (unsigned char) e->idle_char;
 	unsigned int rw_flag = 0;
-	unsigned int time_out = SPI_FLAG_TIMEOUT;
+	//unsigned int time_out = SPI_FLAG_TIMEOUT;
 	unsigned char dummy_w = 0;
 	unsigned char dummy_r = 0;
 	unsigned char *pw = &dummy_w;
@@ -182,30 +257,21 @@ static int stm32f4_spi_read_write(
 	rw_flag |= (in != NULL) ? SPI_R_FLAG : 0;
 	rw_flag |= (out != NULL) ? SPI_W_FLAG : 0;
 
-  while (SPI_I2S_GetFlagStatus((SPI_TypeDef *)SPI1_BASE, SPI_I2S_FLAG_TXE) == RESET)
-  {
-    if((time_out--) == 0) 
-			printk("%s, %d time out\n", __FILE__, __LINE__);
-  }
+  while (SPI_I2S_GetFlagStatus(regs, SPI_I2S_FLAG_TXE) == RESET);
 
 	for (i=0; i<n; i++) {
 		if (out != NULL) {
 			pw = (unsigned char *)(out + i);
 		}
 	  /* Send a Byte through the SPI peripheral */
-	  SPI_I2S_SendData((SPI_TypeDef *)SPI1_BASE, *pw);
+	  SPI_I2S_SendData(regs, *pw);
 		
 		/* Wait to receive a Byte */
-		time_out = SPI_FLAG_TIMEOUT;
-		while (SPI_I2S_GetFlagStatus((SPI_TypeDef *)SPI1_BASE, SPI_I2S_FLAG_RXNE) == RESET)
-		{
-			if((time_out--) == 0) 
-				printk("%s, %d time out\n", __FILE__, __LINE__);
-		}
+		while (SPI_I2S_GetFlagStatus(regs, SPI_I2S_FLAG_RXNE) == RESET);
 		if (in != NULL) {
 			pr = in + i;
 		}
-		*pr = SPI_I2S_ReceiveData((SPI_TypeDef *)SPI1_BASE);
+		*pr = SPI_I2S_ReceiveData(regs);
 	}
 	
   return n;
@@ -282,6 +348,8 @@ static stm32f4_spi_bus_entry stm32f4_spi_bus_table [STM32F4_SPI_NUMBER] = {
     },
     .regs = (SPI_TypeDef *) SPI1_BASE,
     .clock = 0,
+		.p_clk_mosi_miso = &stm32f4_spi1_config_gpio[0],
+		.p_cs = &stm32f4_spi1_config_gpio[1],
     .idle_char = 0xffffffff
   }, {
     /* SPI 2 */
@@ -291,7 +359,9 @@ static stm32f4_spi_bus_entry stm32f4_spi_bus_table [STM32F4_SPI_NUMBER] = {
     },
     .regs = (SPI_TypeDef *) SPI2_BASE,
     .clock = 0,
-    .idle_char = 0xffffffff
+		.p_clk_mosi_miso = &stm32f4_spi2_config_gpio[0],
+		.p_cs = &stm32f4_spi2_config_gpio[1],
+    .idle_char = 0xffffffff,
   }, {
     /* SPI 3 */
     .bus = {
@@ -300,6 +370,8 @@ static stm32f4_spi_bus_entry stm32f4_spi_bus_table [STM32F4_SPI_NUMBER] = {
     },
     .regs = (SPI_TypeDef *) SPI3_BASE,
     .clock = 0,
+    .p_clk_mosi_miso = &stm32f4_spi3_config_gpio[0],
+		.p_cs = &stm32f4_spi3_config_gpio[1],
     .idle_char = 0xffffffff
   }
 };
@@ -336,7 +408,7 @@ rtems_status_code bsp_register_spi
 \*=========================================================================*/
 {
 	int ret_code;
-	int spi_busno;
+	//int spi_busno;
 
 	/*
 	 * init I2C library (if not already done)
@@ -350,12 +422,16 @@ rtems_status_code bsp_register_spi
 	/*
 	 * register SPI bus
 	 */
-	ret_code = rtems_libi2c_register_bus("/dev/spi",
+	ret_code = rtems_libi2c_register_bus("/dev/spi1",
 							 stm32f4_spi_1);
+	//ret_code = rtems_libi2c_register_bus("/dev/spi2",
+	//						 stm32f4_spi_2);
+	//ret_code = rtems_libi2c_register_bus("/dev/spi3",
+	//						 stm32f4_spi_3);
 	if (ret_code < 0) {
 		return -ret_code;
 	}
-	spi_busno = ret_code;
+	//spi_busno = ret_code;
 	/*
 	 * FIXME: further drivers, when available
 	 */
