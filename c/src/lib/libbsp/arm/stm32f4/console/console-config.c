@@ -40,7 +40,7 @@ console_tbl Console_Configuration_Ports [] = {
       .pDeviceFns = &stm32f4_usart_fns,
       .ulCtrlPort1 = (uint32_t) STM32F4_USART_2,
       .ulCtrlPort2 = 1,
-      .ulClock = STM32F4_USART_BAUD,
+      .ulClock = STM32F4_USART_2_BAUD,
       .ulIntVector = STM32F4_IRQ_USART2
     },
   #endif

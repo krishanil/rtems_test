@@ -45,6 +45,14 @@
 #include <bsp/stm32f4xx_exti.h>
 #include "stm32f4xxxx_spi.h"
 
+#include <rtems/bspIo.h>
+
+#include <libchip/serial.h>
+
+#include <bspopts.h>
+#include <bsp/usart.h>
+
+
 const stm32f4_gpio_config stm32f4_led_config_gpio [] = {
 	{ \
 		{ \
@@ -129,8 +137,6 @@ static void stm32f4_key_handler(void *arg)
 }
 #define delay(p) rtems_task_wake_after (RTEMS_MICROSECONDS_TO_TICKS (p))
 
-//void stm32f4_gpio_set_output(int pin, bool set);
-#if 1
 /* Read/Write command */
 #define READWRITE_CMD              ((uint8_t)0x80) 
 /* Multiple byte read/write command */ 
@@ -163,26 +169,50 @@ static void mems_init(void) {
 	printf("\nwho am i is 0x%x\n", temp);
 }
 
-#else
-static void mems_init(void) {
-	LIS302DL_InitTypeDef  LIS302DL_InitStruct;
-	unsigned char temp = 0;
-	
-	/* Set configuration of LIS302DL*/
-	LIS302DL_InitStruct.Power_Mode = LIS302DL_LOWPOWERMODE_ACTIVE;
-	LIS302DL_InitStruct.Output_DataRate = LIS302DL_DATARATE_100;
-	LIS302DL_InitStruct.Axes_Enable = LIS302DL_X_ENABLE | LIS302DL_Y_ENABLE | LIS302DL_Z_ENABLE;
-	LIS302DL_InitStruct.Full_Scale = LIS302DL_FULLSCALE_2_3;
-	LIS302DL_InitStruct.Self_Test = LIS302DL_SELFTEST_NORMAL;
-	LIS302DL_Init(&LIS302DL_InitStruct);
+static void bluetooth_init(void) {
+	//int fd;
+	//fd = open("/dev/ttyS1", O_RDWR);
 
-	delay(30);
-
-	LIS302DL_Read(&temp, LIS302DL_WHO_AM_I_ADDR, 1);
-
-	printf("\nwho am i is 0x%x\n", temp);
+	//printk("fd = 0x%x\n", fd);
 }
-#endif
+
+static void blue_read (void) {
+	int c = 0;
+	char ch = 0;
+	printk("\nblue_read\n");
+	const console_fns *con =
+    Console_Configuration_Ports [0].pDeviceFns;
+	while (1) {
+		c = con->deviceRead((int) 0);
+		if (c != -1) {
+			ch = (char)c;
+			rtems_putc(ch);
+		}
+		//sleep(1);
+		//sleep(1);
+	}
+	exit (0);
+}
+
+static void blue_write (void) {
+		const console_fns *con =
+			Console_Configuration_Ports [0].pDeviceFns;
+		int i = 0;
+		char buf[4] = {0};
+		buf[1] = '\n';
+		
+		printk("\nblue_write\n");
+		while (1) {
+			i++;
+			buf[0] = i%4;
+			con->deviceWrite((int) 0, "AT\n", strlen("AT\n"));
+			sleep(1);
+		}
+	
+	exit (0);
+}
+
+
 
 static void xyos_menu (void)
 {
@@ -273,6 +303,21 @@ xyos_task (rtems_task_argument ignored)
   xyos_menu();
 }
 
+static rtems_task
+uart_read_task (rtems_task_argument ignored)
+{
+  blue_read();
+}
+
+static rtems_task
+uart_write_task (rtems_task_argument ignored)
+{
+	printk("%s, %d\n", __func__, __LINE__);
+  blue_write();
+}
+
+
+
 /*
  * RTEMS Startup Task
  */
@@ -281,18 +326,38 @@ Init (rtems_task_argument ignored)
 {
 	rtems_name Task_name;
 	rtems_id   Task_id;
+	rtems_name BlueTask_name;
+	rtems_id   BlueTask_id;
+	rtems_name BlueWTask_name;
+	rtems_id   BlueWTask_id;
 	rtems_status_code status;
 
 	puts( "\n\n*** xyos startup ***" );
 
 	Task_name = rtems_build_name('X','Y','O','S');
-
 	status = rtems_task_create(
 	Task_name, 1, RTEMS_MINIMUM_STACK_SIZE * 2,
 	RTEMS_DEFAULT_MODES ,
 	RTEMS_FLOATING_POINT | RTEMS_DEFAULT_ATTRIBUTES, &Task_id
 	);
 	status = rtems_task_start( Task_id, xyos_task, 1 );
+
+	BlueWTask_name = rtems_build_name('W','B','L','U');
+	status = rtems_task_create(
+	BlueWTask_name, 2, RTEMS_MINIMUM_STACK_SIZE,
+	RTEMS_DEFAULT_MODES ,
+	RTEMS_FLOATING_POINT | RTEMS_DEFAULT_ATTRIBUTES, &BlueWTask_id
+	);
+	status = rtems_task_start( BlueWTask_id, uart_write_task, 1 );
+
+	BlueTask_name = rtems_build_name('R','B','L','U');
+	status = rtems_task_create(
+	BlueTask_name, 3, RTEMS_MINIMUM_STACK_SIZE,
+	RTEMS_DEFAULT_MODES ,
+	RTEMS_FLOATING_POINT | RTEMS_DEFAULT_ATTRIBUTES, &BlueTask_id
+	);
+	status = rtems_task_start( BlueTask_id, uart_read_task, 1 );
+
 	status = rtems_task_delete( RTEMS_SELF );
 }
 
