@@ -204,8 +204,8 @@ static void blue_write (void) {
 		printk("\nblue_write\n");
 		while (1) {
 			i++;
-			buf[0] = i%4;
-			con->deviceWrite((int) 0, "AT\n", strlen("AT\n"));
+			buf[0] = 'a' + i%4;
+			con->deviceWrite((int) 0, buf, strlen(buf));
 			sleep(1);
 		}
 	
